@@ -15,9 +15,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 export interface ResolvedData {
-  label: string | number;
+  label: string;
   value: number;
   key: number;
+  isFixed?: boolean;
 }
 
 interface Props {
@@ -40,11 +41,16 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       props.handleChange(value);
     }
   };
+  const filteredOptions = props.dropDownOptions
+    ? props.dropDownOptions.filter(
+        eachSelectObj => eachSelectObj.label.toLowerCase() !== 'ice'
+      )
+    : [];
   return (
     <Select
       isMulti
       inputValue={props.query}
-      options={props.dropDownOptions || []}
+      options={filteredOptions}
       name="ingredients"
       onInputChange={handleInputChange}
       isLoading={props.loading}

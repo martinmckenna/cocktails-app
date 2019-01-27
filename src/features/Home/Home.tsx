@@ -13,7 +13,7 @@ import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
 import { getCocktails } from '../../services/cocktails';
 import { getIngredients } from '../../services/ingredients';
-import { APIError } from '../../services/types';
+import { APIError, PaginatedIngredients } from '../../services/types';
 
 type ClassNames = 'root';
 
@@ -31,6 +31,34 @@ type CombinedProps = WithStyles<ClassNames> &
   OptionSelectHandler;
 
 class Home extends React.PureComponent<CombinedProps> {
+  componentDidMount() {
+    /** pre-poplate the GET /cocktails filter with ice */
+    getIngredients({ name: 'ice' })
+      .then(response => {
+        /**
+         * ensure we're only getting the first "ice" result
+         * the issue here is that "orange juice" also gets
+         * returned in the response since it contains "ice"
+         */
+        const filteredResponse = {
+          ...response,
+          ingredients: response.ingredients.filter(
+            eachIng => eachIng.name.toLowerCase() === 'ice'
+          )
+        };
+        this.props.handleSelectOption([
+          {
+            /** ingredients[0] is ice */
+            key: filteredResponse.ingredients[0].id,
+            label: filteredResponse.ingredients[0].name,
+            value: filteredResponse.ingredients[0].id,
+            isFixed: true
+          }
+        ]);
+      })
+      .catch(e => e);
+  }
+
   fetchIngredient = (value: string) => {
     const { setLoadingAndError, setIngredients } = this.props;
     return getIngredients({
@@ -38,13 +66,7 @@ class Home extends React.PureComponent<CombinedProps> {
     })
       .then(response => {
         setLoadingAndError(false, undefined);
-        setIngredients(
-          response.ingredients.map(eachIngredient => ({
-            key: eachIngredient.id,
-            value: eachIngredient.id,
-            label: eachIngredient.name
-          }))
-        );
+        setIngredients(transformAPIResponseToReactSelect(response));
       })
       .catch((e: Error) => {
         setLoadingAndError(false, e);
@@ -60,40 +82,40 @@ class Home extends React.PureComponent<CombinedProps> {
     this.debouncedFetch(value);
   };
 
-  handleChange = (values: ResolvedData[], action: any) => {
-    console.log(action);
-    if (
-      action.action === 'select-option' ||
-      action.action === 'remove-value' ||
-      action.action === 'pop-value'
-    ) {
-      console.log(values);
-      this.props.handleSelectOption(
-        values.map(eachValue => {
-          return eachValue.value;
-        })
-      );
+  /**
+   * handler for selecting or removing an option
+   */
+  handleChange = (values: ResolvedData[], { action, removedValue }: any) => {
+    switch (action) {
+      case 'remove-value':
+      case 'pop-value':
+      case 'select-option':
+        return this.props.handleSelectOption(values);
+      default:
+        return;
     }
   };
 
   handleSubmit = () => {
+    const { selectedOptions } = this.props;
+    const ingList = selectedOptions
+      ? selectedOptions.map(eachIng => eachIng.value)
+      : [];
     getCocktails({
-      ingList: this.props.selectedOptions.join(',')
+      ingList: ingList.join(',')
     })
       .then(response => console.log(response))
       .catch(e => e);
   };
 
   render() {
-    const { loading, data, classes } = this.props;
-
-    console.log(this.props.selectedOptions);
+    const { loading, dropDownData, classes } = this.props;
 
     return (
       <Grid container className={classes.root}>
         <Grid item xs={10}>
           <Searchbar
-            dropDownOptions={data}
+            dropDownOptions={dropDownData}
             loading={loading}
             handleChange={this.handleSearch}
             handleSelect={this.handleChange}
@@ -114,12 +136,12 @@ const styled = withStyles(styles);
 interface SearchState {
   loading: boolean;
   error?: APIError;
-  data?: ResolvedData[];
+  dropDownData?: ResolvedData[];
 }
 
 interface SearchStateSetters {
   setLoadingAndError: (isLoading: boolean, error: any) => void;
-  setIngredients: (ingredient: any) => void;
+  setIngredients: (payload: ResolvedData[]) => void;
 }
 
 type StateAndSetters = StateHandlerMap<SearchState> & SearchStateSetters;
@@ -133,17 +155,16 @@ const withSearchFunctions = withStateHandlers<SearchState, StateAndSetters, {}>(
       loading: isLoading,
       error
     }),
-    setIngredients: () => data => ({ data })
+    setIngredients: () => dropDownData => ({ dropDownData })
   }
 );
 
 interface SelectedOptions {
-  selectedOptions: number[];
+  selectedOptions: ResolvedData[];
 }
 
 interface OptionSelectHandler {
-  handleSelectOption: (ingIds: number[]) => void;
-  handleRemoveOption: (idId: number) => void;
+  handleSelectOption: (data: ResolvedData[]) => void;
 }
 
 type SelectOptionStateAndSetters = StateHandlerMap<SelectedOptions> &
@@ -158,17 +179,30 @@ const withSelectOptionHandling = withStateHandlers<
     selectedOptions: []
   },
   {
-    handleSelectOption: state => ingIds => ({ selectedOptions: ingIds }),
-    handleRemoveOption: state => ingId => ({
-      selectedOptions: state.selectedOptions.filter(
-        eachOption => eachOption !== ingId
-      )
+    handleSelectOption: state => selectedOptions => ({
+      selectedOptions: [
+        /** we want to keep the selectedOptions that have an isFixed flag no matter what */
+        ...state.selectedOptions.filter(eachOption => !!eachOption.isFixed),
+        ...selectedOptions
+      ]
     })
   }
 );
 
+export const transformAPIResponseToReactSelect = (
+  response: PaginatedIngredients
+) => {
+  return response.ingredients.map(eachIngredient => ({
+    key: eachIngredient.id,
+    value: eachIngredient.id,
+    label: eachIngredient.name
+  }));
+};
+
 export default compose<CombinedProps, {}>(
+  /** responsible for setting the drop down options */
   withSearchFunctions,
+  /** responsible for setting the filter for GET /cocktails/ */
   withSelectOptionHandling,
   styled
 )(Home);
