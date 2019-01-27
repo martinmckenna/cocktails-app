@@ -6,6 +6,7 @@ import theme from './theme';
 
 import Header from './features/Header';
 import Home from './features/Home';
+import SearchLanding from './features/SearchLanding';
 
 class App extends Component {
   render() {
@@ -15,7 +16,8 @@ class App extends Component {
           <CssBaseline />
           <Header />
           <Switch>
-            <Route path="/" component={Home} />
+            <Route exact path="/" component={Home} />
+            <Route path="/search" component={SearchLanding} />
           </Switch>
         </MuiThemeProvider>
       </Router>

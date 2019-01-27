@@ -5,13 +5,14 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import { stringify } from 'querystring';
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
-import { getCocktails } from '../../services/cocktails';
 import { getIngredients } from '../../services/ingredients';
 import { APIError, PaginatedIngredients } from '../../services/types';
 
@@ -28,7 +29,8 @@ type CombinedProps = WithStyles<ClassNames> &
   SearchState &
   SearchStateSetters &
   SelectedOptions &
-  OptionSelectHandler;
+  OptionSelectHandler &
+  RouteComponentProps<any>;
 
 class Home extends React.PureComponent<CombinedProps> {
   componentDidMount() {
@@ -97,15 +99,16 @@ class Home extends React.PureComponent<CombinedProps> {
   };
 
   handleSubmit = () => {
-    const { selectedOptions } = this.props;
+    const { selectedOptions, history } = this.props;
+
     const ingList = selectedOptions
       ? selectedOptions.map(eachIng => eachIng.value)
       : [];
-    getCocktails({
-      ingList: ingList.join(',')
-    })
-      .then(response => console.log(response))
-      .catch(e => e);
+
+    const queryParams = {
+      ing_list: ingList.join(',')
+    };
+    history.push(`/search?${stringify(queryParams)}`);
   };
 
   render() {
@@ -204,5 +207,6 @@ export default compose<CombinedProps, {}>(
   withSearchFunctions,
   /** responsible for setting the filter for GET /cocktails/ */
   withSelectOptionHandling,
-  styled
+  styled,
+  withRouter
 )(Home);

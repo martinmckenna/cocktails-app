@@ -4,6 +4,7 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 type ClassNames = 'root';
@@ -16,16 +17,24 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<any>;
 
 const Header: React.SFC<CombinedProps> = props => {
   const { classes } = props;
-  return <div className={classes.root}>App name here</div>;
+  const goHome = () => {
+    props.history.push('/');
+  };
+  return (
+    <div onClick={goHome} className={classes.root}>
+      App name here
+    </div>
+  );
 };
 
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, {}>(
   styled,
-  React.memo
+  React.memo,
+  withRouter
 )(Header);
