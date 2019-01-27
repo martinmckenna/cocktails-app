@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import theme from './theme';
 
 import Header from './features/Header';
+import Home from './features/Home';
 
 class App extends Component {
   render() {
@@ -12,8 +13,9 @@ class App extends Component {
       <Router>
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
+          <Header />
           <Switch>
-            <Route path="/" component={Header} />
+            <Route path="/" component={Home} />
           </Switch>
         </MuiThemeProvider>
       </Router>
