@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { getCocktails } from "./services/cocktails";
+import { getCocktails } from './services/cocktails';
 
 class App extends Component {
   state: any = {
