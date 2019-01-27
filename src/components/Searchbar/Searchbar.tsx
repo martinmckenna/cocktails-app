@@ -36,9 +36,16 @@ type CombinedProps = Props &
 const Searchbar: React.SFC<CombinedProps> = props => {
   const handleInputChange = (value: string, action: any) => {
     /** don't clear the input when we blur the input field */
-    if (action.action !== 'input-blur' && action.action !== 'menu-close') {
+    if (
+      action.action !== 'input-blur' &&
+      action.action !== 'menu-close' &&
+      action.action !== 'set-value'
+    ) {
       props.setQuery(value);
       props.handleChange(value);
+    }
+    if (action.action === 'set-value') {
+      props.setQuery('');
     }
   };
   const filteredOptions = props.dropDownOptions
