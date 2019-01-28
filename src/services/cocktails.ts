@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { stringify } from 'querystring';
 import request from './request';
-import { PaginatedCocktails } from './types';
+import { Cocktail, PaginatedData } from './types';
 
 interface CocktailParams {
   name?: string;
@@ -19,6 +19,6 @@ export const getCocktails = (payload: CocktailParams) => {
     page: page || 1
   };
   return request(`/cocktails?${stringify(params)}`).then(
-    (response: AxiosResponse<PaginatedCocktails>) => response.data
+    (response: AxiosResponse<PaginatedData<Cocktail>>) => response.data
   );
 };

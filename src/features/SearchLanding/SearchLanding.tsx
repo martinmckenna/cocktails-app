@@ -37,7 +37,7 @@ class SearchLanding extends React.PureComponent<CombinedProps, State> {
       ingList: queryParams.ing_list as string
       // willShop: true
     })
-      .then(response => this.setState({ cocktails: response.cocktails }))
+      .then(response => this.setState({ cocktails: response.data }))
       .catch(e => e);
   }
 

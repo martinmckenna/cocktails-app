@@ -14,7 +14,7 @@ import { debounce } from 'throttle-debounce';
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
 import { getIngredients } from '../../services/ingredients';
-import { APIError, PaginatedIngredients } from '../../services/types';
+import { APIError, Ingredient, PaginatedData } from '../../services/types';
 
 type ClassNames = 'root';
 
@@ -44,7 +44,7 @@ class Home extends React.PureComponent<CombinedProps> {
          */
         const filteredResponse = {
           ...response,
-          ingredients: response.ingredients.filter(
+          ingredients: response.data.filter(
             eachIng => eachIng.name.toLowerCase() === 'ice'
           )
         };
@@ -193,9 +193,9 @@ const withSelectOptionHandling = withStateHandlers<
 );
 
 export const transformAPIResponseToReactSelect = (
-  response: PaginatedIngredients
+  response: PaginatedData<Ingredient>
 ) => {
-  return response.ingredients.map(eachIngredient => ({
+  return response.data.map(eachIngredient => ({
     key: eachIngredient.id,
     value: eachIngredient.id,
     label: eachIngredient.name

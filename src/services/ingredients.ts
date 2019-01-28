@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import request from './request';
-import { PaginatedIngredients } from './types';
+import { Ingredient, PaginatedData } from './types';
 
 interface IngredientsParams {
   name?: string;
@@ -9,6 +9,6 @@ interface IngredientsParams {
 
 export const getIngredients = (params: IngredientsParams) => {
   return request(`/ingredients?name=${params.name}&page=${params.page}`).then(
-    (response: AxiosResponse<PaginatedIngredients>) => response.data
+    (response: AxiosResponse<PaginatedData<Ingredient>>) => response.data
   );
 };

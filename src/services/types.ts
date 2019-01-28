@@ -1,11 +1,11 @@
-interface Ingredient {
+export interface Ingredient {
   id: number;
   ing_type: string;
   name: string;
 }
 
-export interface PaginatedIngredients {
-  ingredients: Ingredient[];
+export interface PaginatedData<T> {
+  data: T[];
   pages: number;
   total_results: number;
 }
@@ -30,10 +30,4 @@ export interface Cocktail {
   name: string;
   glass: string;
   finish: null | 'stirred' | 'shaken';
-}
-
-export interface PaginatedCocktails {
-  cocktails: Cocktail[];
-  pages: number;
-  total_results: number;
 }
