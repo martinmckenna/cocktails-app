@@ -39,27 +39,28 @@ interface Props extends CheckboxProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Checkbox: React.SFC<CombinedProps> = props => {
-  const { classes } = props;
+  /** rest in this case being the rest of the checkbox props */
+  const { classes, label, helperText, ...rest } = props;
   return (
     <div className={classes.container}>
       <FormControlLabel
         control={
           <_Checkbox
-            value="fdsaf"
+            {...rest}
             classes={{
               root: classes.root
             }}
             color="primary"
           />
         }
-        label={props.label}
+        label={label}
       />
-      {props.helperText && (
+      {helperText && (
         <Tooltip
           classes={{
             tooltip: classes.toolTip
           }}
-          title={<Typography>{props.helperText}</Typography>}
+          title={<Typography>{helperText}</Typography>}
         >
           <Typography className={classes.popper}>Huh?</Typography>
         </Tooltip>

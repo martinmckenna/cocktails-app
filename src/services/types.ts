@@ -12,7 +12,7 @@ export interface PaginatedData<T> {
 
 export interface APIError {
   error: string;
-  meta?: string;
+  field?: string;
 }
 
 interface IngInCocktail {

@@ -43,7 +43,14 @@ type CombinedProps = WithStyles<ClassNames> &
   OptionSelectHandler &
   RouteComponentProps<any>;
 
-class Home extends React.PureComponent<CombinedProps> {
+interface State {
+  willShop: boolean;
+}
+
+class Home extends React.PureComponent<CombinedProps, State> {
+  state: State = {
+    willShop: false
+  };
   componentDidMount() {
     /** pre-poplate the GET /cocktails filter with ice */
     getIngredients({ name: 'ice' })
@@ -116,14 +123,28 @@ class Home extends React.PureComponent<CombinedProps> {
   handleSubmit = () => {
     const { selectedOptions, history } = this.props;
 
-    const ingList = selectedOptions
-      ? selectedOptions.map(eachIng => eachIng.value)
+    /**
+     * if we are willing to shop for more ings
+     * AKA we want to see results for cocktails we can't make
+     * exclude ice from the params or we'll get SO MANY results
+     */
+    const maybeExcludeIce = !!this.state.willShop
+      ? selectedOptions.filter(eachIng => !eachIng.isFixed)
+      : selectedOptions;
+
+    const ingList = maybeExcludeIce
+      ? maybeExcludeIce.map(eachIng => eachIng.value)
       : [];
 
     const queryParams = {
-      ing_list: ingList.join(',')
+      ing_list: ingList.join(','),
+      willShop: this.state.willShop
     };
     history.push(`/search?${stringify(queryParams)}`);
+  };
+
+  toggleWillShop = () => {
+    this.setState({ willShop: !this.state.willShop });
   };
 
   render() {
@@ -152,8 +173,9 @@ class Home extends React.PureComponent<CombinedProps> {
         </Grid>
         <Grid item xs={12} className={classes.searchbar}>
           <Checkbox
+            onChange={this.toggleWillShop}
+            checked={this.state.willShop}
             label="Willing to shop for more items?"
-            value="fdsaf"
             helperText={`Check this if you want to see results for cocktails
             that you don't have all the ingredients to. For example, if you have Gin,
             you will see 'Gin and Tonic' in the results`}
