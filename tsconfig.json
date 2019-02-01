@@ -17,6 +17,12 @@
     "jsx": "preserve",
     "resolveJsonModule": true,
     "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "src/*": [
+        "src/*"
+      ]
+    },
     "forceConsistentCasingInFileNames": true
   },
   "include": [
