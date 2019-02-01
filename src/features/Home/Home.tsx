@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     width: '70%',
     margin: '0 auto',
-    marginTop: theme.spacing.unit * 3
+    paddingTop: theme.spacing.unit * 3
   },
   header: {
     textAlign: 'center',
@@ -175,7 +175,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
           <Checkbox
             onChange={this.toggleWillShop}
             checked={this.state.willShop}
-            label="Willing to shop for more items?"
+            label="Don't have all the ingredients?"
             helperText={`Check this if you want to see results for cocktails
             that you don't have all the ingredients to. For example, if you have Gin,
             you will see 'Gin and Tonic' in the results`}

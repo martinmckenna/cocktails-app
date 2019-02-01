@@ -1,3 +1,10 @@
-html, body, #root {
-  background-color: #ddd
+html, body {
+  background-color: #ddd;
+  height: 100%;
+  min-height: 100%;
+}
+
+#root {
+  background-color: #ddd;
+  min-height: 100%;
 }

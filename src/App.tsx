@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import theme from './theme';
 
+import Footer from 'src/features/Footer';
 import Header from './features/Header';
 import Home from './features/Home';
 import SearchLanding from './features/SearchLanding';
@@ -19,6 +20,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/search" component={SearchLanding} />
           </Switch>
+          <Footer />
         </MuiThemeProvider>
       </Router>
     );

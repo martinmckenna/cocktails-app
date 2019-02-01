@@ -57,6 +57,7 @@ const Checkbox: React.SFC<CombinedProps> = props => {
       />
       {helperText && (
         <Tooltip
+          disableTouchListener
           classes={{
             tooltip: classes.toolTip
           }}
