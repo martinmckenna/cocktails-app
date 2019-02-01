@@ -6,13 +6,16 @@ import {
 import React from 'react';
 import Select from 'react-select';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
-import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
+
+const customStyles = {
+  menuList: (providedStyles: any) => ({ ...providedStyles, textAlign: 'left' })
+};
 
 export interface ResolvedData {
   label: string;
@@ -26,6 +29,7 @@ interface Props {
   loading: boolean;
   dropDownOptions?: ResolvedData[];
   handleSelect: (value: any, action: any) => void;
+  handleSubmit: () => void;
 }
 
 type CombinedProps = Props &
@@ -48,14 +52,35 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       props.setQuery('');
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<any>) => {
+    /**
+     * submit form on ctrl+enter and shift+enter
+     */
+    if (
+      (e.keyCode === 13 && e.shiftKey) ||
+      (e.keyCode === 13 && e.ctrlKey) ||
+      (e.keyCode === 13 && e.metaKey)
+    ) {
+      props.handleSubmit();
+    }
+  };
+
+  /**
+   * filter ice out of the drop down reccommendations because
+   * we're adding it by default
+   */
   const filteredOptions = props.dropDownOptions
     ? props.dropDownOptions.filter(
         eachSelectObj => eachSelectObj.label.toLowerCase() !== 'ice'
       )
     : [];
+
   return (
     <Select
       isMulti
+      styles={customStyles}
+      onKeyDown={handleKeyDown}
       inputValue={props.query}
       options={filteredOptions}
       name="ingredients"

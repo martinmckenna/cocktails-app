@@ -5,23 +5,34 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { stringify } from 'querystring';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
+import Checkbox from '../../components/Checkbox';
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
 import { getIngredients } from '../../services/ingredients';
 import { APIError, Ingredient, PaginatedData } from '../../services/types';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'header' | 'searchbar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    width: '90%',
-    margin: '0 auto'
+    width: '70%',
+    margin: '0 auto',
+    marginTop: theme.spacing.unit * 3
+  },
+  header: {
+    textAlign: 'center',
+    color: '#000'
+  },
+  searchbar: {
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 3
   }
 });
 
@@ -67,8 +78,12 @@ class Home extends React.PureComponent<CombinedProps> {
       name: value
     })
       .then(response => {
+        const firstFive = {
+          ...response,
+          data: response.data.filter((eachIng, index) => index <= 5)
+        };
         setLoadingAndError(false, undefined);
-        setIngredients(transformAPIResponseToReactSelect(response));
+        setIngredients(transformAPIResponseToReactSelect(firstFive));
       })
       .catch((e: Error) => {
         setLoadingAndError(false, e);
@@ -116,18 +131,33 @@ class Home extends React.PureComponent<CombinedProps> {
 
     return (
       <Grid container className={classes.root}>
-        <Grid item xs={10}>
+        <Grid item xs={12}>
+          <Typography variant="h2" className={classes.header}>
+            Barcart
+          </Typography>
+        </Grid>
+        <Grid className={classes.searchbar} item sm={10} xs={12}>
           <Searchbar
+            handleSubmit={this.handleSubmit}
             dropDownOptions={dropDownData}
             loading={loading}
             handleChange={this.handleSearch}
             handleSelect={this.handleChange}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid className={classes.searchbar} item sm={2} xs={12}>
           <Button onClick={this.handleSubmit} color="primary">
             Search
           </Button>
+        </Grid>
+        <Grid item xs={12} className={classes.searchbar}>
+          <Checkbox
+            label="Willing to shop for more items?"
+            value="fdsaf"
+            helperText={`Check this if you want to see results for cocktails
+            that you don't have all the ingredients to. For example, if you have Gin,
+            you will see 'Gin and Tonic' in the results`}
+          />
         </Grid>
       </Grid>
     );

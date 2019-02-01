@@ -5,6 +5,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -32,11 +33,19 @@ const Header: React.SFC<CombinedProps> = props => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
-        <Button>Home</Button>
+        <Button onClick={goHome}>
+          <Typography color="secondary">Home</Typography>
+        </Button>
       </Grid>
       <Grid item className={classes.profile} xs={9}>
-        <Button>My Profile</Button>
-        {true && <Button>Admin</Button>}
+        <Button>
+          <Typography color="secondary">My Profile</Typography>
+        </Button>
+        {true && (
+          <Button>
+            <Typography color="secondary">Admin</Typography>
+          </Button>
+        )}
       </Grid>
     </Grid>
   );
