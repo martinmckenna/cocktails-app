@@ -43,7 +43,7 @@
     "eject": "react-scripts eject",
     "type": "NODE_PATH=./ tsc --noEmit",
     "lint": "NODE_PATH=./ tslint src/**/*.{ts,tsx}",
-    "format": "NODE_PATH=./ prettier src/**/*.{ts,tsx} --write"
+    "format": "NODE_PATH=./ 'prettier src/**/*.{ts,tsx}' --write"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
