@@ -1,3 +1,5 @@
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import {
   StyleRulesCallback,
   withStyles,
@@ -7,13 +9,16 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'profile';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.primary,
     padding: theme.spacing.unit * 2
+  },
+  profile: {
+    textAlign: 'right'
   }
 });
 
@@ -25,9 +30,15 @@ const Header: React.SFC<CombinedProps> = props => {
     props.history.push('/');
   };
   return (
-    <div onClick={goHome} className={classes.root}>
-      App name here
-    </div>
+    <Grid container className={classes.root}>
+      <Grid item xs={3}>
+        <Button>Home</Button>
+      </Grid>
+      <Grid item className={classes.profile} xs={9}>
+        <Button>My Profile</Button>
+        {true && <Button>Admin</Button>}
+      </Grid>
+    </Grid>
   );
 };
 
