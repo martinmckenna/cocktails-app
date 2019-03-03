@@ -31,3 +31,12 @@ export interface Cocktail {
   glass: string;
   finish: null | 'stirred' | 'shaken';
 }
+
+export interface LoginCreds {
+  username: string;
+  password: string;
+}
+
+export interface Token {
+  token: string;
+}
