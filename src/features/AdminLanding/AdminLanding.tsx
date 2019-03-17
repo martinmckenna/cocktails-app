@@ -8,6 +8,7 @@ import React from 'react';
 import { compose } from 'recompose';
 
 import Button from '@material-ui/core/Button';
+import CreateCocktailForm from './CreateForms/CreateCocktail';
 import CreateIngredientForm from './CreateForms/CreateIngredient';
 
 type ClassNames = 'root';
@@ -32,6 +33,7 @@ const AdminLanding: React.SFC<CombinedProps> = props => {
       <Button onClick={navigateToCocktailForm}>Create Cocktail</Button>
       <Button onClick={navigateToIngForm}>Create Ingredient</Button>
       <Router>
+        <CreateCocktailForm path="cocktails/create" />
         <CreateIngredientForm path="ingredients/create" />
       </Router>
     </React.Fragment>

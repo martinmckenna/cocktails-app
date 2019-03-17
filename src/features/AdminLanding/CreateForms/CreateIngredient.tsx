@@ -7,8 +7,12 @@ import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
 
-import Button from '@material-ui/core/Button';
+import Button from 'src/components/Button';
+import Select, { Option } from 'src/components/Select';
 import TextField from 'src/components/TextField';
+
+import { createIngredient, IngTypes } from 'src/services/ingredients';
+import { APIError } from 'src/services/types';
 
 type ClassNames = 'root';
 
@@ -20,29 +24,77 @@ type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
 interface State {
   ingName: string;
-  ingType: '' | 'juice' | 'liquor' | 'fruit';
+  ingType: IngTypes;
+  isCreatingIngredient: boolean;
+  error?: APIError;
 }
+
+const options: Option<IngTypes, IngTypes>[] = [
+  {
+    value: 'Liquor',
+    label: 'Liquor'
+  },
+  {
+    value: 'Fruit',
+    label: 'Fruit'
+  },
+  {
+    value: 'Juice',
+    label: 'Juice'
+  }
+];
 
 class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
   state: State = {
     ingName: '',
-    ingType: ''
+    ingType: '',
+    isCreatingIngredient: false
   };
 
-  handleChangeName = (e: any) => {
-    this.setState({ ingName: e.taret.value });
+  handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ingName: e.target.value });
   };
 
-  handleChangeType = (e: any) => {
-    this.setState({ ingType: e.taret.value });
+  handleChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ ingType: e.target.value as IngTypes });
+  };
+
+  handleCreateIngredient = () => {
+    const { ingName, ingType } = this.state;
+
+    this.setState({
+      isCreatingIngredient: true,
+      error: undefined
+    });
+
+    return createIngredient({
+      name: ingName,
+      ing_type: ingType
+    })
+      .then(response => {
+        this.setState({ isCreatingIngredient: false });
+        console.log(`ingredient ${response.name} created`);
+      })
+      .catch((error: APIError) => {
+        this.setState({
+          isCreatingIngredient: false,
+          error
+        });
+        console.log(error);
+      });
   };
 
   render() {
     return (
       <form>
         <TextField onChange={this.handleChangeName} />
-        <TextField onChange={this.handleChangeType} />
-        <Button>Create Ingredient</Button>
+        <Select options={options} onChange={this.handleChangeType} />
+        <Button
+          onClick={this.handleCreateIngredient}
+          isLoading={this.state.isCreatingIngredient}
+        >
+          Create Ingredient
+        </Button>
       </form>
     );
   }

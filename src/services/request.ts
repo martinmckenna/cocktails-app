@@ -21,8 +21,8 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => response,
   (err: AxiosError): Promise<APIError> => {
-    return err.response
-      ? Promise.reject(err.response)
+    return err.response && err.response.data
+      ? Promise.reject(err.response.data)
       : Promise.reject([
           {
             error: 'There was an error'
