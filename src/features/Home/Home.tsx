@@ -6,9 +6,9 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { RouteComponentProps } from '@reach/router';
 import { stringify } from 'querystring';
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
@@ -18,7 +18,7 @@ import Searchbar, { ResolvedData } from '../../components/Searchbar';
 import { getIngredients } from '../../services/ingredients';
 import { APIError, Ingredient, PaginatedData } from '../../services/types';
 
-type ClassNames = 'root' | 'header' | 'searchbar';
+type ClassNames = 'root' | 'header' | 'searchbar' | 'disclaimer';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -33,6 +33,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   searchbar: {
     textAlign: 'center',
     marginTop: theme.spacing.unit * 3
+  },
+  disclaimer: {
+    margin: '0 auto',
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -110,6 +114,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
    * handler for selecting or removing an option
    */
   handleChange = (values: ResolvedData[], { action, removedValue }: any) => {
+    console.log(values);
     switch (action) {
       case 'remove-value':
       case 'pop-value':
@@ -121,7 +126,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
   };
 
   handleSubmit = () => {
-    const { selectedOptions, history } = this.props;
+    const { selectedOptions, navigate } = this.props;
 
     /**
      * if we are willing to shop for more ings
@@ -140,7 +145,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
       ing_list: ingList.join(','),
       willShop: this.state.willShop
     };
-    history.push(`/search?${stringify(queryParams)}`);
+    navigate!(`/search?${stringify(queryParams)}`);
   };
 
   toggleWillShop = () => {
@@ -171,14 +176,22 @@ class Home extends React.PureComponent<CombinedProps, State> {
             Search
           </Button>
         </Grid>
+        <Grid item xs={8} className={classes.disclaimer}>
+          <Typography>
+            Thanks for using Barcart - please keep in mind this app is still a
+            work-in-progress. If you'd like to get an idea about what this app
+            does, try typing in 'orange juice' and 'vodka' in the search field
+            above and watch the magic.
+          </Typography>
+        </Grid>
         <Grid item xs={12} className={classes.searchbar}>
           <Checkbox
             onChange={this.toggleWillShop}
             checked={this.state.willShop}
             label="Don't have all the ingredients?"
-            helperText={`Check this if you want to see results for cocktails
-            that you don't have all the ingredients to. For example, if you have Gin,
-            you will see 'Gin and Tonic' in the results`}
+            helperText={`For example, if you only have Gin, but you'd still
+            like to see suggestions for a Gin and Tonic and other drinks
+            you could make with additional ingredients, check this box.`}
           />
         </Grid>
       </Grid>
@@ -254,11 +267,10 @@ export const transformAPIResponseToReactSelect = (
   }));
 };
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, RouteComponentProps>(
   /** responsible for setting the drop down options */
   withSearchFunctions,
   /** responsible for setting the filter for GET /cocktails/ */
   withSelectOptionHandling,
-  styled,
-  withRouter
+  styled
 )(Home);

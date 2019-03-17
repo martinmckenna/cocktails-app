@@ -13,11 +13,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
 
-interface Props {}
+type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps;
-
-const Login: React.SFC<CombinedProps> = props => {
+const CreateIngredientForm: React.SFC<CombinedProps> = props => {
   return <div>hello world</div>;
 };
 
@@ -26,4 +24,4 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, RouteComponentProps>(
   styled,
   React.memo
-)(Login);
+)(CreateIngredientForm);

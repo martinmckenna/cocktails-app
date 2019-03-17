@@ -4,6 +4,7 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { RouteComponentProps } from '@reach/router';
 import { parse } from 'querystring';
 import React from 'react';
 import { compose } from 'recompose';
@@ -26,7 +27,9 @@ interface State {
   cocktails?: Cocktail[];
 }
 
-type CombinedProps = LoadingAndErrorProps & WithStyles<ClassNames>;
+type CombinedProps = LoadingAndErrorProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps;
 
 class SearchLanding extends React.PureComponent<CombinedProps, State> {
   state: State = {
@@ -85,7 +88,7 @@ class SearchLanding extends React.PureComponent<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, RouteComponentProps>(
   styled,
   withLoadingAndError
 )(SearchLanding);

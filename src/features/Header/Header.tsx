@@ -6,9 +6,10 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { navigate } from '@reach/router';
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { isProduction } from 'src/constants';
 
 type ClassNames = 'root' | 'profile';
 
@@ -23,13 +24,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<any>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const Header: React.SFC<CombinedProps> = props => {
   const { classes } = props;
-  const goHome = () => {
-    props.history.push('/');
-  };
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
@@ -37,24 +35,33 @@ const Header: React.SFC<CombinedProps> = props => {
           <Typography color="secondary">Home</Typography>
         </Button>
       </Grid>
-      <Grid item className={classes.profile} xs={9}>
-        <Button>
-          <Typography color="secondary">My Profile</Typography>
-        </Button>
-        {true && (
+      {!isProduction && (
+        <Grid item className={classes.profile} xs={9}>
           <Button>
-            <Typography color="secondary">Admin</Typography>
+            <Typography color="secondary">My Profile</Typography>
           </Button>
-        )}
-      </Grid>
+          {true && (
+            <Button onClick={goToAdmin}>
+              <Typography color="secondary">Admin</Typography>
+            </Button>
+          )}
+        </Grid>
+      )}
     </Grid>
   );
+};
+
+const goHome = () => {
+  navigate('/');
+};
+
+const goToAdmin = () => {
+  navigate('/admin');
 };
 
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, {}>(
   styled,
-  React.memo,
-  withRouter
+  React.memo
 )(Header);

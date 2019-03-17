@@ -2,7 +2,7 @@ import { APIError } from 'src/services/types';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { handleLogin, handleLogout } from './authentication.actions';
 
-interface State {
+export interface State {
   token: string;
   expiry: string;
   isLoggingIn: boolean;
@@ -37,3 +37,5 @@ const reducer = reducerWithInitialState(initialState)
     };
   })
   .default(state => ({ ...state }));
+
+export default reducer;

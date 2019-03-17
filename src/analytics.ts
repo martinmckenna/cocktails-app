@@ -1,3 +1,5 @@
+import { analyticsCode, isProduction } from 'src/constants';
+
 /* tslint:disable */
 const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
   const currdate: any = new Date();
@@ -23,9 +25,11 @@ const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
  * @param production current environment of the app
  */
 export const initAnalytics = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  if (!isProduction && !analyticsCode) {
+    return;
+  }
 
-  const gaId = isProduction ? 'UA-88950785-4' : 'UA-88950785-5';
+  const gaId = isProduction ? 'UA-88950785-4' : analyticsCode;
 
   const url = isProduction
     ? 'https://www.google-analytics.com/analytics.js'

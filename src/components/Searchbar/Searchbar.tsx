@@ -38,18 +38,29 @@ type CombinedProps = Props &
   SearchStateSetters;
 
 const Searchbar: React.SFC<CombinedProps> = props => {
-  const handleInputChange = (value: string, action: any) => {
+  const {
+    handleChange,
+    dropDownOptions,
+    loading,
+    handleSelect,
+    handleSubmit,
+    classes,
+    query,
+    setQuery
+  } = props;
+
+  const onInputChange = (value: string, action: any) => {
     /** don't clear the input when we blur the input field */
     if (
       action.action !== 'input-blur' &&
       action.action !== 'menu-close' &&
       action.action !== 'set-value'
     ) {
-      props.setQuery(value);
-      props.handleChange(value);
+      setQuery(value);
+      handleChange(value);
     }
     if (action.action === 'set-value') {
-      props.setQuery('');
+      setQuery('');
     }
   };
 
@@ -62,7 +73,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       (e.keyCode === 13 && e.ctrlKey) ||
       (e.keyCode === 13 && e.metaKey)
     ) {
-      props.handleSubmit();
+      handleSubmit();
     }
   };
 
@@ -70,8 +81,8 @@ const Searchbar: React.SFC<CombinedProps> = props => {
    * filter ice out of the drop down reccommendations because
    * we're adding it by default
    */
-  const filteredOptions = props.dropDownOptions
-    ? props.dropDownOptions.filter(
+  const filteredOptions = dropDownOptions
+    ? dropDownOptions.filter(
         eachSelectObj => eachSelectObj.label.toLowerCase() !== 'ice'
       )
     : [];
@@ -84,10 +95,13 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       inputValue={props.query}
       options={filteredOptions}
       name="ingredients"
-      onInputChange={handleInputChange}
-      isLoading={props.loading}
+      onInputChange={onInputChange}
+      isLoading={loading}
       isClearable={true}
-      onChange={props.handleSelect}
+      onChange={handleSelect}
+      loadingMessage={() => 'Fetching ingredients...'}
+      noOptionsMessage={() => 'No Ingredients Found'}
+      placeholder='Search ingredients (e.g "Vodka")'
     />
   );
 };

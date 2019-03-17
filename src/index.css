@@ -8,3 +8,7 @@ html, body {
   background-color: #ddd;
   min-height: 100%;
 }
+
+*:focus {
+  border: 2px solid red;
+}

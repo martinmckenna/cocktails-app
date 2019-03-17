@@ -8,6 +8,7 @@
     "align": { "severity": "warning" },
     "array-type": false,
     "ban-types": false,
+    "jsx-no-lambda": false,
     "callable-types": { "severity": "warning" },
     "class-name": { "severity": "warning" },
     "curly": { "severity": "warning" },
