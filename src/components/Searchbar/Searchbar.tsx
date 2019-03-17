@@ -11,7 +11,9 @@ import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {
+    padding: theme.spacing.unit
+  }
 });
 
 const customStyles = {

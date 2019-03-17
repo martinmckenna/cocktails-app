@@ -18,7 +18,12 @@ import Searchbar, { ResolvedData } from '../../components/Searchbar';
 import { getIngredients } from '../../services/ingredients';
 import { APIError, Ingredient, PaginatedData } from '../../services/types';
 
-type ClassNames = 'root' | 'header' | 'searchbar' | 'disclaimer';
+type ClassNames =
+  | 'root'
+  | 'header'
+  | 'searchbar'
+  | 'disclaimer'
+  | 'searchButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -33,6 +38,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   searchbar: {
     textAlign: 'center',
     marginTop: theme.spacing.unit * 3
+  },
+  searchButton: {
+    marginTop: theme.spacing.unit * 1,
+    marginBottom: theme.spacing.unit
   },
   disclaimer: {
     margin: '0 auto',
@@ -164,6 +173,8 @@ class Home extends React.PureComponent<CombinedProps, State> {
         </Grid>
         <Grid className={classes.searchbar} item sm={10} xs={12}>
           <Searchbar
+            className="react-select-container"
+            classNamePrefix="react-select"
             handleSubmit={this.handleSubmit}
             dropDownOptions={dropDownData}
             loading={loading}
@@ -175,7 +186,11 @@ class Home extends React.PureComponent<CombinedProps, State> {
           />
         </Grid>
         <Grid className={classes.searchbar} item sm={2} xs={12}>
-          <Button onClick={this.handleSubmit} color="primary">
+          <Button
+            className={classes.searchButton}
+            onClick={this.handleSubmit}
+            color="primary"
+          >
             Search
           </Button>
         </Grid>

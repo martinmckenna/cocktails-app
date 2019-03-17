@@ -13,6 +13,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     position: 'absolute',
     bottom: 0,
+    left: 0,
     height: '50px',
     paddingRight: theme.spacing.unit * 2,
     color: '#000',
