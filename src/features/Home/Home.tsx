@@ -194,6 +194,16 @@ class Home extends React.PureComponent<CombinedProps, State> {
             Search
           </Button>
         </Grid>
+        <Grid item xs={12} className={classes.searchbar}>
+          <Checkbox
+            onChange={this.toggleWillShop}
+            checked={this.state.willShop}
+            label="Don't have all the ingredients?"
+            helperText={`For example, if you only have Gin, but you'd still
+            like to see suggestions for a Gin and Tonic and other drinks
+            you could make with additional ingredients, check this box.`}
+          />
+        </Grid>
         <Grid item xs={8} className={classes.disclaimer}>
           <Typography>
             Thanks for using Barcart - please keep in mind this app is still a
@@ -205,16 +215,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
             </a>{' '}
             with any questions.
           </Typography>
-        </Grid>
-        <Grid item xs={12} className={classes.searchbar}>
-          <Checkbox
-            onChange={this.toggleWillShop}
-            checked={this.state.willShop}
-            label="Don't have all the ingredients?"
-            helperText={`For example, if you only have Gin, but you'd still
-            like to see suggestions for a Gin and Tonic and other drinks
-            you could make with additional ingredients, check this box.`}
-          />
         </Grid>
       </Grid>
     );
