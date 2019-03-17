@@ -169,6 +169,9 @@ class Home extends React.PureComponent<CombinedProps, State> {
             loading={loading}
             handleChange={this.handleSearch}
             handleSelect={this.handleChange}
+            loadingMessage={() => 'Fetching ingredients...'}
+            noOptionsMessage={() => 'No Ingredients Found'}
+            placeholder='Search ingredients (e.g "Vodka" and "Orange Juice")'
           />
         </Grid>
         <Grid className={classes.searchbar} item sm={2} xs={12}>
@@ -181,7 +184,11 @@ class Home extends React.PureComponent<CombinedProps, State> {
             Thanks for using Barcart - please keep in mind this app is still a
             work-in-progress. If you'd like to get an idea about what this app
             does, try typing in 'orange juice' and 'vodka' in the search field
-            above and watch the magic.
+            above and watch the magic. Feel free to{' '}
+            <a target="_blank" href="https://atmarty.com#contact">
+              contact me
+            </a>{' '}
+            with any questions.
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.searchbar}>

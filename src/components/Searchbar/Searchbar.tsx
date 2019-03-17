@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core/styles';
 import React from 'react';
 import Select from 'react-select';
+import { Props as SelectProps } from 'react-select/lib/Select';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 
 type ClassNames = 'root';
@@ -35,7 +36,8 @@ interface Props {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   SearchState &
-  SearchStateSetters;
+  SearchStateSetters &
+  SelectProps;
 
 const Searchbar: React.SFC<CombinedProps> = props => {
   const {
@@ -93,15 +95,13 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       styles={customStyles}
       onKeyDown={handleKeyDown}
       inputValue={props.query}
-      options={filteredOptions}
+      options={filteredOptions as any}
       name="ingredients"
       onInputChange={onInputChange}
       isLoading={loading}
       isClearable={true}
       onChange={handleSelect}
-      loadingMessage={() => 'Fetching ingredients...'}
-      noOptionsMessage={() => 'No Ingredients Found'}
-      placeholder='Search ingredients (e.g "Vodka")'
+      {...props}
     />
   );
 };
@@ -127,7 +127,7 @@ const withSearchFunctions = withStateHandlers<SearchState, StateAndSetters, {}>(
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, Props & SelectProps>(
   withSearchFunctions,
   styled,
   React.memo

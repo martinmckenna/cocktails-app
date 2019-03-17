@@ -7,6 +7,9 @@ import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
 
+import Button from '@material-ui/core/Button';
+import TextField from 'src/components/TextField';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -15,9 +18,35 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
-const CreateIngredientForm: React.SFC<CombinedProps> = props => {
-  return <div>hello world</div>;
-};
+interface State {
+  ingName: string;
+  ingType: '' | 'juice' | 'liquor' | 'fruit';
+}
+
+class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
+  state: State = {
+    ingName: '',
+    ingType: ''
+  };
+
+  handleChangeName = (e: any) => {
+    this.setState({ ingName: e.taret.value });
+  };
+
+  handleChangeType = (e: any) => {
+    this.setState({ ingType: e.taret.value });
+  };
+
+  render() {
+    return (
+      <form>
+        <TextField onChange={this.handleChangeName} />
+        <TextField onChange={this.handleChangeType} />
+        <Button>Create Ingredient</Button>
+      </form>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
