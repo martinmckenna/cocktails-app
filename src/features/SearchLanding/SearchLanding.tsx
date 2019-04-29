@@ -3,7 +3,6 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import { RouteComponentProps } from '@reach/router';
 import { parse } from 'querystring';
 import React from 'react';
@@ -12,35 +11,35 @@ import { compose } from 'recompose';
 import { getCocktails } from '../../services/cocktails';
 import { Cocktail } from '../../services/types';
 
-import withLoadingAndError, {
-  Props as LoadingAndErrorProps
-} from '../../components/WithLoadingAndError';
+import Error from 'src/components/LandingError';
+import Loading from 'src/components/LandingLoading';
+import Card from 'src/components/SearchResultCard';
 import NoResults from './NoResults';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-between',
+    margin: theme.spacing.unit * 2
+  }
 });
 
-interface State {
-  cocktails?: Cocktail[];
-}
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps;
 
-type CombinedProps = LoadingAndErrorProps &
-  WithStyles<ClassNames> &
-  RouteComponentProps;
+const SearchLanding: React.FC<CombinedProps> = props => {
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>('');
+  const [cocktails, setCocktails] = React.useState<Cocktail[]>([]);
 
-class SearchLanding extends React.PureComponent<CombinedProps, State> {
-  state: State = {
-    cocktails: undefined
-  };
-  componentDidMount() {
-    /** @todo if willShop is true, exclude ice fro the GET request */
-
+  React.useEffect(() => {
     /** 0 character is the "?" */
     const queryParams = parse(location.search.substr(1));
-    this.props.setLoadingAndClearErrors();
+    setLoading(true);
+    setError('');
 
     const willShop =
       queryParams.willShop && queryParams.willShop === 'true' ? true : false;
@@ -50,45 +49,44 @@ class SearchLanding extends React.PureComponent<CombinedProps, State> {
       willShop
     })
       .then(response => {
-        this.setState({ cocktails: response.data });
-        this.props.clearLoadingAndErrors();
+        setLoading(false);
+        setCocktails(response.data);
       })
       .catch(e => {
-        this.props.setErrorAndClearLoading('There was an error');
+        setLoading(false);
+        setError('There was an error');
       });
+  }, []);
+
+  if (loading) {
+    return <Loading message="Loading your cocktails..." />;
   }
 
-  render() {
-    const { cocktails } = this.state;
-    const { loading, error } = this.props;
-
-    if (loading) {
-      return <div>Loading...</div>;
-    }
-
-    if (error) {
-      return <div>There was an error.</div>;
-    }
-
-    if (!cocktails || cocktails.length === 0) {
-      return <NoResults />;
-    }
-    return (
-      <React.Fragment>
-        <Typography variant="h5">
-          Here are the cocktails you can make:
-        </Typography>
-        {cocktails.map(eachCocktail => {
-          return <div key={eachCocktail.id}>{eachCocktail.name}</div>;
-        })}
-      </React.Fragment>
-    );
+  if (error) {
+    return <Error message={error} />;
   }
-}
+
+  if (!cocktails || cocktails.length === 0) {
+    return <NoResults />;
+  }
+
+  return (
+    <div className={props.classes.root}>
+      {cocktails.map(eachCocktail => {
+        return (
+          <Card
+            href={`/cocktails/${eachCocktail.id}`}
+            key={eachCocktail.id}
+            name={eachCocktail.name}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, RouteComponentProps>(
-  styled,
-  withLoadingAndError
-)(SearchLanding);
+export default compose<CombinedProps, RouteComponentProps>(styled)(
+  SearchLanding
+);

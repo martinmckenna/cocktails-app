@@ -12,13 +12,11 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing.unit * 3
   }
 });
 
-interface Props {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const NoResults: React.SFC<CombinedProps> = props => {
   const { classes } = props;

@@ -21,6 +21,10 @@ body {
   padding: .5em;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* *:focus {
   border: 2px solid red;
 } */
