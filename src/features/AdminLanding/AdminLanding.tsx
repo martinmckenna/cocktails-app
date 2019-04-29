@@ -11,10 +11,15 @@ import Button from '@material-ui/core/Button';
 import CreateCocktailForm from './CreateForms/CreateCocktail';
 import CreateIngredientForm from './CreateForms/CreateIngredient';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'tabs';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {
+    margin: `${theme.spacing.unit * 2}px 0px 0px ${theme.spacing.unit * 2}px`
+  },
+  tabs: {
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 type CombinedProps = WithStyles<ClassNames> & RouteComponentProps;
@@ -29,14 +34,16 @@ const AdminLanding: React.SFC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
-      <Button onClick={navigateToCocktailForm}>Create Cocktail</Button>
-      <Button onClick={navigateToIngForm}>Create Ingredient</Button>
+    <div className={props.classes.root}>
+      <div className={props.classes.tabs}>
+        <Button onClick={navigateToCocktailForm}>Create Cocktail</Button>
+        <Button onClick={navigateToIngForm}>Create Ingredient</Button>
+      </div>
       <Router>
         <CreateCocktailForm path="cocktails/create" />
         <CreateIngredientForm path="ingredients/create" />
       </Router>
-    </React.Fragment>
+    </div>
   );
 };
 

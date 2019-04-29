@@ -21,24 +21,25 @@ export interface Option<V = string | number, L = string | number> {
 
 interface Props {
   options: Option[];
+  defaultText?: string;
 }
 
 type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
 
 const Select: React.SFC<CombinedProps> = props => {
-  const { options, SelectProps, ...rest } = props;
+  const { options, SelectProps, defaultText, ...rest } = props;
   return (
     <TextField
       select
-      defaultValue="Select One"
+      defaultValue={defaultText || 'Select One'}
       SelectProps={{
         ...SelectProps,
         native: true
       }}
       {...rest}
     >
-      <option disabled key={0} value="Select One">
-        Select One
+      <option disabled key={0} value={defaultText || 'Select One'}>
+        {defaultText || 'Select One'}
       </option>
       {options.map(option => (
         <option key={option.value} value={option.value}>

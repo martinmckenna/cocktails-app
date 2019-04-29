@@ -33,6 +33,7 @@ interface Props {
   dropDownOptions?: ResolvedData[];
   handleSelect: (value: any, action: any) => void;
   handleSubmit: () => void;
+  filterIce?: boolean;
 }
 
 type CombinedProps = Props &
@@ -86,14 +87,15 @@ const Searchbar: React.SFC<CombinedProps> = props => {
    * we're adding it by default
    */
   const filteredOptions = dropDownOptions
-    ? dropDownOptions.filter(
-        eachSelectObj => eachSelectObj.label.toLowerCase() !== 'ice'
-      )
+    ? !!props.filterIce
+      ? dropDownOptions.filter(
+          eachSelectObj => eachSelectObj.label.toLowerCase() !== 'ice'
+        )
+      : dropDownOptions
     : [];
 
   return (
     <Select
-      isMulti
       styles={customStyles}
       onKeyDown={handleKeyDown}
       inputValue={props.query}

@@ -1,8 +1,4 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
@@ -11,16 +7,10 @@ import Button from 'src/components/Button';
 import Select, { Option } from 'src/components/Select';
 import TextField from 'src/components/TextField';
 
+import withFormStyles, { FormStyleProps } from './CreateForms.styles';
+
 import { createIngredient, IngTypes } from 'src/services/ingredients';
 import { APIError } from 'src/services/types';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
-type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
 interface State {
   ingName: string;
@@ -41,8 +31,14 @@ const options: Option<IngTypes, IngTypes>[] = [
   {
     value: 'Juice',
     label: 'Juice'
+  },
+  {
+    value: 'Misc',
+    label: 'Misc'
   }
 ];
+
+type CombinedProps = RouteComponentProps & FormStyleProps;
 
 class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
   state: State = {
@@ -85,10 +81,21 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <form>
-        <TextField onChange={this.handleChangeName} />
-        <Select options={options} onChange={this.handleChangeType} />
+      <form className={classes.root}>
+        <Typography variant="h4">
+          Creating Ingredient {this.state.ingName}
+        </Typography>
+        <TextField
+          onChange={this.handleChangeName}
+          placeholder="Name of Ingredient"
+        />
+        <Select
+          options={options}
+          onChange={this.handleChangeType}
+          defaultText="Select Ingredient Type"
+        />
         <Button
           onClick={this.handleCreateIngredient}
           isLoading={this.state.isCreatingIngredient}
@@ -100,9 +107,7 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, RouteComponentProps>(
-  styled,
+  withFormStyles,
   React.memo
 )(CreateIngredientForm);

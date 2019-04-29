@@ -7,12 +7,12 @@ interface IngredientsParams {
   page?: number;
 }
 
-export type IngTypes = '' | 'Juice' | 'Liquor' | 'Fruit';
+export type IngTypes = '' | 'Juice' | 'Liquor' | 'Fruit' | 'Misc';
 
-export const getIngredients = (params: IngredientsParams) => {
-  return request(`/ingredients?name=${params.name}&page=${params.page}`).then(
-    (response: AxiosResponse<PaginatedData<Ingredient>>) => response.data
-  );
+export const getIngredients = (params?: IngredientsParams) => {
+  return request(
+    `/ingredients?name=${params && params.name}&page=${params && params.page}`
+  ).then((response: AxiosResponse<PaginatedData<Ingredient>>) => response.data);
 };
 
 interface CreateParams {

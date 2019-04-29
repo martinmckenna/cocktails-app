@@ -10,6 +10,26 @@ interface CocktailParams {
   page?: number;
 }
 
+export type GlassType = '' | 'Rocks' | 'Highball' | 'Snifter';
+
+export type ActionType = '' | 'Add' | 'Muddle' | 'Squeeze';
+
+export type Finishes = string | null;
+
+export interface Ingredient {
+  ounces: number;
+  id: number;
+  step: number;
+  action: ActionType;
+}
+
+export interface CreatePayload {
+  name: string;
+  glass: GlassType;
+  finish: Finishes;
+  ingredients: Ingredient[];
+}
+
 export const getCocktails = (payload: CocktailParams) => {
   const { name, ingList, willShop, page } = payload;
   const params = {
@@ -21,4 +41,14 @@ export const getCocktails = (payload: CocktailParams) => {
   return request(`/cocktails?${stringify(params)}`).then(
     (response: AxiosResponse<PaginatedData<Cocktail>>) => response.data
   );
+};
+
+export const createCocktail = (payload: CreatePayload) => {
+  if (!payload.finish) {
+    delete payload.finish;
+  }
+  return request(`/cocktails`, {
+    method: 'POST',
+    data: payload
+  }).then((response: AxiosResponse<Cocktail>) => response.data);
 };

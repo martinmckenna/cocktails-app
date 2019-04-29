@@ -16,7 +16,9 @@ import Checkbox from '../../components/Checkbox';
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
 import { getIngredients } from '../../services/ingredients';
-import { APIError, Ingredient, PaginatedData } from '../../services/types';
+import { APIError } from '../../services/types';
+
+import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
 type ClassNames =
   | 'root'
@@ -123,7 +125,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
    * handler for selecting or removing an option
    */
   handleChange = (values: ResolvedData[], { action, removedValue }: any) => {
-    console.log(values);
     switch (action) {
       case 'remove-value':
       case 'pop-value':
@@ -173,6 +174,8 @@ class Home extends React.PureComponent<CombinedProps, State> {
         </Grid>
         <Grid className={classes.searchbar} item sm={10} xs={12}>
           <Searchbar
+            filterIce
+            isMulti
             className="react-select-container"
             classNamePrefix="react-select"
             handleSubmit={this.handleSubmit}
@@ -203,18 +206,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
             like to see suggestions for a Gin and Tonic and other drinks
             you could make with additional ingredients, check this box.`}
           />
-        </Grid>
-        <Grid item xs={8} className={classes.disclaimer}>
-          <Typography>
-            Thanks for using Barcart - please keep in mind this app is still a
-            work-in-progress. If you'd like to get an idea about what this app
-            does, try typing in 'orange juice' and 'vodka' in the search field
-            above and watch the magic. Feel free to{' '}
-            <a target="_blank" href="https://atmarty.com#contact">
-              contact me
-            </a>{' '}
-            with any questions.
-          </Typography>
         </Grid>
       </Grid>
     );
@@ -278,16 +269,6 @@ const withSelectOptionHandling = withStateHandlers<
     })
   }
 );
-
-export const transformAPIResponseToReactSelect = (
-  response: PaginatedData<Ingredient>
-) => {
-  return response.data.map(eachIngredient => ({
-    key: eachIngredient.id,
-    value: eachIngredient.id,
-    label: eachIngredient.name
-  }));
-};
 
 export default compose<CombinedProps, RouteComponentProps>(
   /** responsible for setting the drop down options */

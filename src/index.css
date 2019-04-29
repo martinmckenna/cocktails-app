@@ -21,6 +21,6 @@ body {
   padding: .5em;
 }
 
-*:focus {
+/* *:focus {
   border: 2px solid red;
-}
+} */

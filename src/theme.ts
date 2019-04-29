@@ -4,6 +4,7 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true
   },
+  overrides: {},
   palette: {
     text: {
       primary: '#000',
