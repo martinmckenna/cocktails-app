@@ -24,7 +24,7 @@ import { APIError } from 'src/services/types';
 
 import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
-const glasses: Option<GlassType, GlassType>[] = [
+const glasses: Option<string, string>[] = [
   {
     label: 'Rocks',
     value: 'Rocks'
@@ -36,6 +36,10 @@ const glasses: Option<GlassType, GlassType>[] = [
   {
     label: 'Snifter',
     value: 'Snifter'
+  },
+  {
+    label: 'Champagne Flute',
+    value: 'Champagne Flute'
   }
 ];
 
