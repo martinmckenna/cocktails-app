@@ -19,7 +19,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 const customStyles = {
-  menuList: (providedStyles: any) => ({ ...providedStyles, textAlign: 'left' })
+  menuList: (providedStyles: any) => ({
+    ...providedStyles,
+    textAlign: 'left',
+    padding: 0
+  }),
+  option: (providedStyles: any) => ({ ...providedStyles, padding: '1em' }),
+  loadingMessage: (providedStyles: any) => ({
+    ...providedStyles,
+    padding: '1em'
+  }),
+  noOptionsMessage: (providedStyles: any) => ({
+    ...providedStyles,
+    padding: '1em'
+  })
 };
 
 export interface ResolvedData {
@@ -52,6 +65,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     handleSelect,
     handleSubmit,
     setQuery
+    // query,
   } = props;
 
   const onInputChange = (value: string, action: any) => {
@@ -120,10 +134,15 @@ const _Menu: React.FC<any> = props => {
       <components.MenuList {...props}>
         {props.children}
         <Button
-          style={{ width: '100%', paddingTop: '1em', paddingBottom: '1em' }}
+          style={{
+            width: '100%',
+            paddingTop: '1em',
+            paddingBottom: '1em',
+            backgroundColor: '#E0E0E0'
+          }}
           onClick={props.handleSubmit}
         >
-          Search
+          Search with selected ingredients
         </Button>
       </components.MenuList>
     </React.Fragment>

@@ -30,7 +30,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    width: '70%',
+    width: '85%',
     margin: '0 auto',
     paddingTop: theme.spacing.unit * 3
   },

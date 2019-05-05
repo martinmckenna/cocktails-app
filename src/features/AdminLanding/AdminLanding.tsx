@@ -15,7 +15,7 @@ type ClassNames = 'root' | 'tabs';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    margin: `${theme.spacing.unit * 2}px 0px 0px ${theme.spacing.unit * 2}px`
+    margin: theme.spacing.unit
   },
   tabs: {
     marginBottom: theme.spacing.unit * 2

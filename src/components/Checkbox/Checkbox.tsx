@@ -15,13 +15,16 @@ type ClassNames = 'root' | 'container' | 'popper' | 'toolTip';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     color: theme.palette.primary.main
+    // textAlign: 'left'
   },
   container: {
     display: 'flex',
     flexDirection: 'row',
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    textAlign: 'left',
+    '&>label': {
+      margin: '0 auto'
+    }
   },
   toolTip: {
     backgroundColor: '#eee'

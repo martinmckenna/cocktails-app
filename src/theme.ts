@@ -8,10 +8,11 @@ const theme = createMuiTheme({
   overrides: {
     MuiInputBase: {
       input: {
+        minHeight: '38px',
         backgroundColor: '#fff',
         borderRadius: 0,
         border: 'none',
-        padding: '1em',
+        padding: '.5em .75em .5em .75em',
         '&:focus': {
           outline: '2px solid rgba(0,107,224,.98)'
         }
@@ -42,14 +43,8 @@ const theme = createMuiTheme({
         padding: '.5em',
         fontSize: '1em',
         fontFamily: 'Raleway,Arial,serif',
-        boxSizing: 'border-box',
-        // '&:hover': {
-        //   backgroundColor: '#fff'
-        // },
         '&:focus': {
-          // backgroundColor: 'rgba(0,107,224,.98)',
           outline: '1px solid rgba(0,107,224,.98)'
-          // color: '#fff'
         }
       }
     }

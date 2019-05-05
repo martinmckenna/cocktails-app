@@ -12,7 +12,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'column',
     '&>*': {
       width: '75%',
-      margin: theme.spacing.unit
+      margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px 0`,
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     }
   },
   section: {

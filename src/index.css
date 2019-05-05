@@ -19,14 +19,21 @@ body {
 
 .react-select__control {
   border-radius: 0 !important;
+  text-align: left;
+  border: none;
 }
 
-.react-select__control > div {
+.react-select__control > div:first-child {
   padding: 1em;
 }
 
 .react-select__control:focus {
   outline: 1px solid rgba(0,107,224,.98) !important;
+  border: none;
+}
+
+.react-select__placeholder {
+  opacity: .8;
 }
 
 a {
@@ -58,9 +65,16 @@ button {
   border: 2px solid red;
 } */
 
-@media (max-width: 500px) {
-  .react-select__control > div {
-    padding: 1.2em;
-    /* font-size: .75em; */
+@media (max-width: 600px) {
+  .react-select__control > div:first-child {
+    padding: .5em;
+  }  
+  
+  .react-select__input {
+    font-size: 1.5em;
   }
+
+   .react-select__placeholder {
+     font-size: .75em;
+   }
 }
