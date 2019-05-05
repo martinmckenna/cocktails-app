@@ -139,11 +139,13 @@ const _Menu: React.FC<any> = props => {
         {props.children}
         {props.handleSubmit && (
           <Button
+            tabIndex={0}
             style={{
               width: '100%',
               paddingTop: '1em',
               paddingBottom: '1em',
-              backgroundColor: '#E0E0E0'
+              backgroundColor: '#E0E0E0',
+              color: '#000'
             }}
             onClick={props.handleSubmit}
           >

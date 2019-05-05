@@ -235,6 +235,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
               {index > 0 && (
                 <Button
                   onClick={() => setIngredientsCount(ingredientsCount - 1)}
+                  variant="secondary"
                 >
                   Remove Ingredient
                 </Button>
@@ -243,7 +244,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
           );
         }
       )}
-      <div className={classes.section}>
+      <div className={classes.buttonWrapper}>
         <Button onClick={() => setIngredientsCount(ingredientsCount + 1)}>
           Add Ingredient
         </Button>

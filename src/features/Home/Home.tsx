@@ -43,9 +43,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit * 3
   },
   searchButton: {
+    margin: '0 auto',
     marginTop: theme.spacing.unit * 1,
     marginBottom: theme.spacing.unit,
-    width: '100%',
+    padding: theme.spacing.unit,
+    width: '50%',
     textAlign: 'center'
   },
   checkbox: {

@@ -4,7 +4,7 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 
-type ClassNames = 'root' | 'section';
+type ClassNames = 'root' | 'section' | 'buttonWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -24,6 +24,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'column',
     '&>*': {
       marginTop: theme.spacing.unit
+    }
+  },
+  buttonWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: theme.spacing.unit * 2,
+    '&>button': {
+      width: '40%',
+      margin: theme.spacing.unit,
+      flexGrow: 1
     }
   }
 });

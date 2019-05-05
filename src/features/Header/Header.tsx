@@ -16,10 +16,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.primary,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
+    '& button': {
+      padding: theme.spacing.unit * 1.5,
+      margin: `0 ${theme.spacing.unit}px 0 ${theme.spacing.unit}px`
+    }
   },
   profile: {
     textAlign: 'right'
+    // '&>button': {
+    //   margin: `0 ${theme.spacing.unit}px 0 ${theme.spacing.unit}px`,
+    //   padding: theme.spacing.unit * 2,
+    // }
   }
 });
 
@@ -30,15 +38,15 @@ const Header: React.SFC<CombinedProps> = props => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
-        <Button onClick={goHome} variant="secondary">
+        <Button onClick={goHome} variant="primary">
           Home
         </Button>
       </Grid>
       {!isProduction && (
         <Grid item className={classes.profile} xs={9}>
-          <Button variant="secondary">My Profile</Button>
+          <Button variant="primary">My Profile</Button>
           {true && (
-            <Button onClick={goToAdmin} variant="secondary">
+            <Button onClick={goToAdmin} variant="primary">
               Admin
             </Button>
           )}

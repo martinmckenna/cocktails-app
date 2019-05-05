@@ -42,10 +42,7 @@ const theme = createMuiTheme({
       root: {
         padding: '.5em',
         fontSize: '1em',
-        fontFamily: 'Raleway,Arial,serif',
-        '&:focus': {
-          outline: '1px solid rgba(0,107,224,.98)'
-        }
+        fontFamily: 'Raleway,Arial,serif'
       }
     }
   },
