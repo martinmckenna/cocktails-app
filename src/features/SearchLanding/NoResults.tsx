@@ -19,11 +19,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 type CombinedProps = WithStyles<ClassNames>;
 
 const NoResults: React.SFC<CombinedProps> = props => {
+  const [isVisible, setVisible] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setVisible(true);
+    }, 250);
+  }, []);
+
   const { classes } = props;
-  return (
+  return isVisible ? (
     <div className={classes.root}>
       <Typography variant="h5">No results found.</Typography>
     </div>
+  ) : (
+    <React.Fragment />
   );
 };
 
