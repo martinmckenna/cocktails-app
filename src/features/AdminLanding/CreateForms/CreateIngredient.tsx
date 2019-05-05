@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import { RouteComponentProps } from '@reach/router';
+import { navigate, RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
 
@@ -70,10 +70,15 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
       ing_type: ingType
     })
       .then(response => {
-        this.setState({ isCreatingIngredient: false });
+        this.setState({
+          isCreatingIngredient: false,
+          ingName: '',
+          ingType: ''
+        });
         this.props.enqueueSnackbar(`ingredient ${response.name} created`, {
           variant: 'success'
         });
+        navigate('/admin');
       })
       .catch((error: APIError) => {
         this.setState({

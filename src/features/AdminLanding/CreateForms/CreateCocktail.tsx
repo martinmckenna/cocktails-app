@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import { RouteComponentProps } from '@reach/router';
+import { navigate, RouteComponentProps } from '@reach/router';
 import { assocPath } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
@@ -163,6 +163,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
           variant: 'success'
         });
         setLoading(false);
+        navigate('/admin');
       })
       .catch((e: APIError) => {
         props.enqueueSnackbar(`Error ${e.error}`, {

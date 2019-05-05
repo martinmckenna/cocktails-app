@@ -117,13 +117,15 @@ const Searchbar: React.SFC<CombinedProps> = props => {
 const _Menu: React.FC<any> = props => {
   return (
     <React.Fragment>
-      <components.MenuList {...props}>{props.children}</components.MenuList>
-      <Button
-        style={{ width: '100%', padding: '1em' }}
-        onClick={props.handleSubmit}
-      >
-        Search
-      </Button>
+      <components.MenuList {...props}>
+        {props.children}
+        <Button
+          style={{ width: '100%', paddingTop: '1em', paddingBottom: '1em' }}
+          onClick={props.handleSubmit}
+        >
+          Search
+        </Button>
+      </components.MenuList>
     </React.Fragment>
   );
 };
