@@ -222,7 +222,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setOunces(assocPath([index], e.target.value, ounces))
                 }
-                placeholder="Enter Number of Ounces"
+                placeholder="Enter Number of Parts"
               />
               <Select
                 options={actions}
