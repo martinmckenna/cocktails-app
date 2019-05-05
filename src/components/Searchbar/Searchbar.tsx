@@ -47,7 +47,7 @@ interface Props {
   loading: boolean;
   dropDownOptions?: ResolvedData[];
   handleSelect: (value: any, action: any) => void;
-  handleSubmit: () => void;
+  handleSubmit?: () => void;
   filterIce?: boolean;
 }
 
@@ -87,6 +87,10 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     /**
      * submit form on ctrl+enter and shift+enter
      */
+    if (!handleSubmit) {
+      return;
+    }
+
     if (
       (e.keyCode === 13 && e.shiftKey) ||
       (e.keyCode === 13 && e.ctrlKey) ||
@@ -133,17 +137,19 @@ const _Menu: React.FC<any> = props => {
     <React.Fragment>
       <components.MenuList {...props}>
         {props.children}
-        <Button
-          style={{
-            width: '100%',
-            paddingTop: '1em',
-            paddingBottom: '1em',
-            backgroundColor: '#E0E0E0'
-          }}
-          onClick={props.handleSubmit}
-        >
-          Search with selected ingredients
-        </Button>
+        {props.handleSubmit && (
+          <Button
+            style={{
+              width: '100%',
+              paddingTop: '1em',
+              paddingBottom: '1em',
+              backgroundColor: '#E0E0E0'
+            }}
+            onClick={props.handleSubmit}
+          >
+            Search with selected ingredients
+          </Button>
+        )}
       </components.MenuList>
     </React.Fragment>
   );

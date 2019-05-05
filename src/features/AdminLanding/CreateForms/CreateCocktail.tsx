@@ -207,7 +207,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
               <Searchbar
                 className="react-select-container"
                 classNamePrefix="react-select"
-                handleSubmit={() => null}
+                // handleSubmit={() => null}
                 dropDownOptions={dropDownOptions}
                 loading={isSearchingIngredient}
                 handleChange={handleSearch}
