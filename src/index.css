@@ -18,8 +18,11 @@ body {
 }
 
 .react-select__control {
-  padding: .5em;
   border-radius: 0 !important;
+}
+
+.react-select__control > div {
+  padding: 1em;
 }
 
 .react-select__control:focus {
@@ -28,6 +31,11 @@ body {
 
 a {
   text-decoration: none;
+  color: rgba(0,107,224,.98);
+}
+
+a:active {
+  outline: 1px solid rgba(0,107,224,.98) !important;
 }
 
 p,
@@ -49,3 +57,10 @@ button {
 /* *:focus {
   border: 2px solid red;
 } */
+
+@media (max-width: 500px) {
+  .react-select__control > div {
+    padding: 1.2em;
+    /* font-size: .75em; */
+  }
+}

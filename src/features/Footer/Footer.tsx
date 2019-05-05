@@ -12,16 +12,17 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -150,
     left: 0,
     height: '50px',
-    paddingRight: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit * 1.5,
     color: '#000',
     display: 'flex',
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    textAlign: 'right'
   }
 });
 

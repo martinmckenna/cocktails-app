@@ -24,7 +24,7 @@ type ClassNames =
   | 'root'
   | 'header'
   | 'searchbar'
-  | 'disclaimer'
+  | 'checkbox'
   | 'searchButton'
   | 'blurb';
 
@@ -48,9 +48,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%',
     textAlign: 'center'
   },
-  disclaimer: {
-    margin: '0 auto',
-    marginTop: theme.spacing.unit * 2
+  checkbox: {
+    textAlign: 'center',
+    marginTop: theme.spacing.unit * 3
+    // marginBottom: theme.spacing.unit * 5,
   },
   blurb: {
     marginTop: theme.spacing.unit * 2
@@ -179,10 +180,10 @@ class Home extends React.PureComponent<CombinedProps, State> {
             Barcart
           </Typography>
         </Grid>
-        <Typography variant="subtitle1" className={classes.blurb}>
+        {/* <Typography variant="subtitle1" className={classes.blurb}>
           Start by searching for ingredients on your shelf and see results for
           cocktails you can make
-        </Typography>
+        </Typography> */}
         <Grid className={classes.searchbar} item xs={12}>
           <Searchbar
             filterIce
@@ -206,7 +207,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
         >
           Search
         </Button>
-        <Grid item xs={12} className={classes.searchbar}>
+        <Grid item xs={12} className={classes.checkbox}>
           <Checkbox
             onChange={this.toggleWillShop}
             checked={this.state.willShop}
