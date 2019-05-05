@@ -115,6 +115,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
   return (
     <Select
       styles={customStyles}
+      onBlur={() => null}
       onKeyDown={handleKeyDown}
       inputValue={props.query}
       options={filteredOptions as any}
@@ -145,11 +146,13 @@ const _Menu: React.FC<any> = props => {
               paddingTop: '1em',
               paddingBottom: '1em',
               backgroundColor: '#E0E0E0',
-              color: '#000'
+              color: '#000',
+              textDecoration: 'underline'
             }}
             onClick={props.handleSubmit}
+            plain
           >
-            Search with selected ingredients
+            Search (CMD + Enter or Ctrl + Enter)
           </Button>
         )}
       </components.MenuList>

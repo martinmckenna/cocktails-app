@@ -22,9 +22,12 @@ const NoResults: React.SFC<CombinedProps> = props => {
   const [isVisible, setVisible] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setVisible(true);
     }, 250);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   const { classes } = props;

@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   buttonWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 8,
     '&>button': {
       width: '40%',
       margin: theme.spacing.unit,

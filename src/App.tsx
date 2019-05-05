@@ -9,6 +9,7 @@ import store from 'src/store';
 
 import Admin from 'src/features/AdminLanding';
 import CocktailDetail from 'src/features/CocktailDetail';
+import Contact from 'src/features/Contact';
 import Footer from 'src/features/Footer';
 import Login from 'src/features/Login';
 import Header from './features/Header';
@@ -33,7 +34,8 @@ class App extends Component {
               <SearchLanding path="search" />
               <Login path="login" />
               <Admin path="admin/*" />
-              <CocktailDetail path="cocktails/*" />
+              <CocktailDetail path="cocktails/:id" />
+              <Contact path="contact" />
             </Router>
             <Footer />
           </MuiThemeProvider>

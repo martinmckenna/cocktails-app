@@ -30,9 +30,12 @@ const LandingLoading: React.FC<CombinedProps> = props => {
   const [isVisible, setVisible] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setVisible(true);
     }, 750);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   return isVisible ? (

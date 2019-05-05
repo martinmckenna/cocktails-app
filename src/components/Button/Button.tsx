@@ -8,7 +8,12 @@ import { compose } from 'recompose';
 
 import _Button, { ButtonBaseProps } from '@material-ui/core/ButtonBase';
 
-type ClassNames = 'root' | 'secondary' | 'primary';
+type ClassNames =
+  | 'root'
+  | 'secondary'
+  | 'primary'
+  | 'primaryAddit'
+  | 'secondaryAddit';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -17,6 +22,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   primary: {
     color: '#fff',
     backgroundColor: 'rgba(0,107,224,.98)',
+    '&:focus': {
+      outline: '2px solid #fff'
+    }
+  },
+  primaryAddit: {
     '-webkit-box-shadow': '0 7px 0px 0px #0051a9',
     boxShadow: '0 7px 0px 0px #0051a9',
     '-webkit-transition': 'all 0.05s ease',
@@ -35,14 +45,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '-o-transform': 'translateY(3px)',
       '-ms-transform': 'translateY(3px)',
       transform: 'translateY(3px)'
-    },
-    '&:focus': {
-      outline: '2px solid #fff'
     }
   },
   secondary: {
     color: '#fff',
     backgroundColor: '#ab0457db',
+    '&:focus': {
+      outline: '2px solid #fff'
+    }
+  },
+  secondaryAddit: {
     '-webkit-box-shadow': '0 7px 0px 0px #650233db',
     boxShadow: '0 7px 0px 0px #650233db',
     '-webkit-transition': 'all 0.05s ease',
@@ -61,9 +73,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '-o-transform': 'translateY(3px)',
       '-ms-transform': 'translateY(3px)',
       transform: 'translateY(3px)'
-    },
-    '&:focus': {
-      outline: '2px solid #fff'
     }
   }
 });
@@ -71,23 +80,32 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props extends ButtonBaseProps {
   isLoading?: boolean;
   variant?: 'primary' | 'secondary';
+  plain?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Button: React.SFC<CombinedProps> = props => {
-  const { isLoading, children, classes, ...rest } = props;
+  const { isLoading, plain, variant, children, classes, ...rest } = props;
 
-  const className = props.variant
-    ? props.variant === 'primary'
-      ? classes.primary
-      : classes.secondary
-    : classes.primary;
+  const variantString =
+    !props.variant || props.variant === 'primary' ? 'primary' : 'secondary';
+
+  const className =
+    variantString === 'primary' ? classes.primary : classes.secondary;
+
+  const additional = !!plain
+    ? ''
+    : variantString === 'primary'
+    ? classes.primaryAddit
+    : classes.secondaryAddit;
 
   return (
     <_Button
       {...rest}
-      className={`${props.className} ${classes.root} ${className}`}
+      className={`${props.className} ${
+        classes.root
+      } ${className} ${additional}`}
       disableRipple={true}
     >
       {isLoading ? 'Loading...' : children}

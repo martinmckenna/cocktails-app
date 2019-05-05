@@ -43,6 +43,12 @@ export const getCocktails = (payload: CocktailParams) => {
   );
 };
 
+export const getCocktail = (id: number) => {
+  return request(`/cocktails/${id}`).then(
+    (response: AxiosResponse<Cocktail>) => response.data
+  );
+};
+
 export const createCocktail = (payload: CreatePayload) => {
   if (!payload.finish) {
     delete payload.finish;

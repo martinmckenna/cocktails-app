@@ -20,7 +20,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   tabs: {
     marginBottom: theme.spacing.unit * 2,
     '&>button': {
-      margin: theme.spacing.unit * 2
+      margin: theme.spacing.unit * 2,
+      padding: theme.spacing.unit * 2
     }
   }
 });
