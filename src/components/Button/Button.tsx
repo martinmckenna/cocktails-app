@@ -6,23 +6,40 @@ import {
 import React from 'react';
 import { compose } from 'recompose';
 
-import _Button, { ButtonProps } from '@material-ui/core/Button';
+import _Button, { ButtonBaseProps } from '@material-ui/core/ButtonBase';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'secondary';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {
+    color: '#000'
+  },
+  secondary: {
+    color: '#fff'
+  }
 });
 
-interface Props extends ButtonProps {
+interface Props extends ButtonBaseProps {
   isLoading?: boolean;
+  variant?: 'primary' | 'secondary';
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Button: React.SFC<CombinedProps> = props => {
-  const { isLoading, children, ...rest } = props;
-  return <_Button {...rest}>{isLoading ? 'Loading...' : children}</_Button>;
+  const { isLoading, children, classes, ...rest } = props;
+
+  const className = props.variant
+    ? props.variant === 'primary'
+      ? classes.root
+      : classes.secondary
+    : classes.root;
+
+  return (
+    <_Button className={className} disableRipple={true} {...rest}>
+      {isLoading ? 'Loading...' : children}
+    </_Button>
+  );
 };
 
 const styled = withStyles(styles);

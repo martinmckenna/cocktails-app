@@ -6,7 +6,8 @@ import {
 import React from 'react';
 import { compose } from 'recompose';
 
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import Select from 'react-select';
+import { Props as SelectProps } from 'react-select/lib/Select';
 
 type ClassNames = 'root';
 
@@ -17,42 +18,52 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 export interface Option<V = string | number, L = string | number> {
   value: V;
   label: L;
+  disabled?: boolean;
 }
 
-interface Props {
+interface Props extends Omit<SelectProps, 'options' | 'onChange'> {
   options: Option[];
-  defaultText?: string;
+  defaultOption?: string;
+  handleSelect: (value: any, actionMeta: any) => void;
 }
 
-type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Select: React.SFC<CombinedProps> = props => {
-  const { options, SelectProps, defaultText, ...rest } = props;
+const _Select: React.SFC<CombinedProps> = props => {
+  const { classes, options, defaultOption, handleSelect, ...rest } = props;
+
+  const interceptedOptions: Option[] = defaultOption
+    ? [
+        {
+          label: defaultOption,
+          value: defaultOption,
+          disabled: true
+        },
+        ...options
+      ]
+    : options;
+
   return (
-    <TextField
-      select
-      defaultValue={defaultText || 'Select One'}
-      SelectProps={{
-        ...SelectProps,
-        native: true
-      }}
+    <Select
       {...rest}
-    >
-      <option disabled key={0} value={defaultText || 'Select One'}>
-        {defaultText || 'Select One'}
-      </option>
-      {options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </TextField>
+      classNamePrefix="react-select"
+      options={interceptedOptions as any}
+      placeholder={
+        defaultOption
+          ? `${interceptedOptions[0].label}`
+          : props.placeholder
+          ? props.placeholder
+          : 'Select an Option'
+      }
+      onChange={handleSelect}
+      isOptionDisabled={(option: Option) => option.disabled || false}
+    />
   );
 };
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, TextFieldProps & Props>(
+export default compose<CombinedProps, SelectProps & Props>(
   styled,
   React.memo
-)(Select);
+)(_Select);

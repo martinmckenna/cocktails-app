@@ -47,6 +47,7 @@ const Checkbox: React.SFC<CombinedProps> = props => {
         control={
           <_Checkbox
             {...rest}
+            disableRipple={true}
             classes={{
               root: classes.root
             }}

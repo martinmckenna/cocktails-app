@@ -22,6 +22,8 @@ import {
 import { getIngredients } from 'src/services/ingredients';
 import { APIError } from 'src/services/types';
 
+import { withSnackbar, WithSnackbarProps } from 'notistack';
+
 import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
 const glasses: Option<string, string>[] = [
@@ -69,7 +71,7 @@ const finishes: Option<Finishes, Finishes>[] = [
   }
 ];
 
-type CombinedProps = FormStyleProps & RouteComponentProps;
+type CombinedProps = FormStyleProps & RouteComponentProps & WithSnackbarProps;
 
 const CreateCocktail: React.FC<CombinedProps> = props => {
   const [label, setLabel] = React.useState<string>('');
@@ -122,7 +124,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
    */
   const handleChange = (
     values: ResolvedData,
-    { action, removedValue }: any,
+    { action }: any,
     index: number
   ) => {
     switch (action) {
@@ -157,11 +159,15 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
       ingredients: ingPayload
     })
       .then(response => {
-        console.log(response);
+        props.enqueueSnackbar(`Cocktail ${response[0].name} created`, {
+          variant: 'success'
+        });
         setLoading(false);
       })
       .catch((e: APIError) => {
-        console.log(e);
+        props.enqueueSnackbar(`Error ${e.error}`, {
+          variant: 'error'
+        });
         setLoading(false);
         setError(e);
       });
@@ -180,17 +186,17 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
       />
       <Select
         options={glasses}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          setGlass(e.target.value as GlassType)
+        handleSelect={(value: Option<GlassType, GlassType>) =>
+          setGlass(value.label)
         }
-        defaultText="Select Glass"
+        defaultOption="Select Glass"
       />
       <Select
         options={finishes as any}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          setFinish(e.target.value as Finishes)
+        handleSelect={(value: Option<Finishes, Finishes>) =>
+          setFinish(value.label ? value.label.toLowerCase() : '')
         }
-        defaultText="Select Finish (optional)"
+        defaultOption="Select Finish (optional)"
       />
       {Array.apply(null, Array(ingredientsCount)).map(
         (eachIteration, index) => {
@@ -220,12 +226,10 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
               />
               <Select
                 options={actions}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setActions(
-                    assocPath([index], e.target.value, selectedActions)
-                  )
-                }
-                defaultText="Select Action"
+                handleSelect={(value: Option<ActionType, ActionType>) => {
+                  setActions(assocPath([index], value.label, selectedActions));
+                }}
+                defaultOption="Select Action"
               />
               {index > 0 && (
                 <Button
@@ -252,5 +256,6 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, RouteComponentProps>(
   withFormStyles,
+  withSnackbar,
   React.memo
 )(CreateCocktail);

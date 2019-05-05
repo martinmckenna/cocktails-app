@@ -1,4 +1,3 @@
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {
   StyleRulesCallback,
@@ -12,6 +11,7 @@ import React from 'react';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
+import Button from 'src/components/Button';
 import Checkbox from '../../components/Checkbox';
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
@@ -25,7 +25,8 @@ type ClassNames =
   | 'header'
   | 'searchbar'
   | 'disclaimer'
-  | 'searchButton';
+  | 'searchButton'
+  | 'blurb';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -43,11 +44,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   searchButton: {
     marginTop: theme.spacing.unit * 1,
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing.unit,
+    width: '100%',
+    textAlign: 'center'
   },
   disclaimer: {
     margin: '0 auto',
     marginTop: theme.spacing.unit * 2
+  },
+  blurb: {
+    marginTop: theme.spacing.unit * 2
+    // textAlign: 'center'
   }
 });
 
@@ -124,7 +131,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
   /**
    * handler for selecting or removing an option
    */
-  handleChange = (values: ResolvedData[], { action, removedValue }: any) => {
+  handleChange = (values: ResolvedData[], { action }: any) => {
     switch (action) {
       case 'remove-value':
       case 'pop-value':
@@ -172,7 +179,11 @@ class Home extends React.PureComponent<CombinedProps, State> {
             Barcart
           </Typography>
         </Grid>
-        <Grid className={classes.searchbar} item sm={10} xs={12}>
+        <Typography variant="subtitle1" className={classes.blurb}>
+          Start by searching for ingredients on your shelf and see results for
+          cocktails you can make
+        </Typography>
+        <Grid className={classes.searchbar} item xs={12}>
           <Searchbar
             filterIce
             isMulti
@@ -185,26 +196,24 @@ class Home extends React.PureComponent<CombinedProps, State> {
             handleSelect={this.handleChange}
             loadingMessage={() => 'Fetching ingredients...'}
             noOptionsMessage={() => 'No Ingredients Found'}
-            placeholder='Search ingredients (e.g "Vodka" and "Orange Juice")'
+            placeholder='Search ingredients (e.g "Vodka" or "Orange Juice")'
           />
         </Grid>
-        <Grid className={classes.searchbar} item sm={2} xs={12}>
-          <Button
-            className={classes.searchButton}
-            onClick={this.handleSubmit}
-            color="primary"
-          >
-            Search
-          </Button>
-        </Grid>
+        <Button
+          className={classes.searchButton}
+          onClick={this.handleSubmit}
+          style={{ marginTop: '1em' }}
+        >
+          Search
+        </Button>
         <Grid item xs={12} className={classes.searchbar}>
           <Checkbox
             onChange={this.toggleWillShop}
             checked={this.state.willShop}
-            label="Don't have all the ingredients?"
-            helperText={`For example, if you only have Gin, but you'd still
-            like to see suggestions for a Gin and Tonic and other drinks
-            you could make with additional ingredients, check this box.`}
+            label="I want to see suggestions for non-perfect matches"
+            // helperText={`For example, if you only have Gin, but you'd still
+            // like to see suggestions for a Gin and Tonic and other drinks
+            // you could make with additional ingredients, check this box.`}
           />
         </Grid>
       </Grid>

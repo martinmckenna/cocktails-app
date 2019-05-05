@@ -32,7 +32,7 @@ const Footer: React.SFC<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       <div>
-        <Typography>
+        <Typography variant="subtitle1">
           Copyright {new Date().getFullYear()} &hearts;&nbsp;
           <a target="_blank" href="https://atmarty.com">
             Martin McKenna

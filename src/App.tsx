@@ -8,28 +8,37 @@ import theme from './theme';
 import store from 'src/store';
 
 import Admin from 'src/features/AdminLanding';
+import CocktailDetail from 'src/features/CocktailDetail';
 import Footer from 'src/features/Footer';
 import Login from 'src/features/Login';
 import Header from './features/Header';
 import Home from './features/Home';
 import SearchLanding from './features/SearchLanding';
 
+import SnackbarProvider from 'src/components/SnackbarProvider';
+
 class App extends Component {
   render() {
     return (
-      <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <Header />
-          <Router>
-            <Home path="/" />
-            <SearchLanding path="search" />
-            <Login path="login" />
-            <Admin path="admin/*" />
-          </Router>
-          <Footer />
-        </MuiThemeProvider>
-      </Provider>
+      <SnackbarProvider
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        autoHideDuration={2000}
+      >
+        <Provider store={store}>
+          <MuiThemeProvider theme={theme}>
+            <CssBaseline />
+            <Header />
+            <Router>
+              <Home path="/" />
+              <SearchLanding path="search" />
+              <Login path="login" />
+              <Admin path="admin/*" />
+              <CocktailDetail path="cocktails/*" />
+            </Router>
+            <Footer />
+          </MuiThemeProvider>
+        </Provider>
+      </SnackbarProvider>
     );
   }
 }

@@ -1,14 +1,13 @@
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import { navigate } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import { isProduction } from 'src/constants';
 
 type ClassNames = 'root' | 'profile';
@@ -31,18 +30,16 @@ const Header: React.SFC<CombinedProps> = props => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={3}>
-        <Button onClick={goHome}>
-          <Typography color="secondary">Home</Typography>
+        <Button onClick={goHome} variant="secondary">
+          Home
         </Button>
       </Grid>
       {!isProduction && (
         <Grid item className={classes.profile} xs={9}>
-          <Button>
-            <Typography color="secondary">My Profile</Typography>
-          </Button>
+          <Button variant="secondary">My Profile</Button>
           {true && (
-            <Button onClick={goToAdmin}>
-              <Typography color="secondary">Admin</Typography>
+            <Button onClick={goToAdmin} variant="secondary">
+              Admin
             </Button>
           )}
         </Grid>

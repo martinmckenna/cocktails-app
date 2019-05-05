@@ -12,6 +12,8 @@ import withFormStyles, { FormStyleProps } from './CreateForms.styles';
 import { createIngredient, IngTypes } from 'src/services/ingredients';
 import { APIError } from 'src/services/types';
 
+import { withSnackbar, WithSnackbarProps } from 'notistack';
+
 interface State {
   ingName: string;
   ingType: IngTypes;
@@ -38,7 +40,7 @@ const options: Option<IngTypes, IngTypes>[] = [
   }
 ];
 
-type CombinedProps = RouteComponentProps & FormStyleProps;
+type CombinedProps = RouteComponentProps & FormStyleProps & WithSnackbarProps;
 
 class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
   state: State = {
@@ -51,8 +53,8 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
     this.setState({ ingName: e.target.value });
   };
 
-  handleChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ ingType: e.target.value as IngTypes });
+  handleChangeType = (value: Option<IngTypes, IngTypes>) => {
+    this.setState({ ingType: value.label });
   };
 
   handleCreateIngredient = () => {
@@ -69,14 +71,18 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
     })
       .then(response => {
         this.setState({ isCreatingIngredient: false });
-        console.log(`ingredient ${response.name} created`);
+        this.props.enqueueSnackbar(`ingredient ${response.name} created`, {
+          variant: 'success'
+        });
       })
       .catch((error: APIError) => {
         this.setState({
           isCreatingIngredient: false,
           error
         });
-        console.log(error);
+        this.props.enqueueSnackbar(error.error, {
+          variant: 'error'
+        });
       });
   };
 
@@ -93,8 +99,8 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
         />
         <Select
           options={options}
-          onChange={this.handleChangeType}
-          defaultText="Select Ingredient Type"
+          handleSelect={this.handleChangeType}
+          defaultOption="Select Ingredient Type"
         />
         <Button
           onClick={this.handleCreateIngredient}
@@ -109,5 +115,6 @@ class CreateIngredientForm extends React.PureComponent<CombinedProps, State> {
 
 export default compose<CombinedProps, RouteComponentProps>(
   withFormStyles,
+  withSnackbar,
   React.memo
 )(CreateIngredientForm);

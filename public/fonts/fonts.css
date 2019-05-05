@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-weight: normal;
+  font-style: normal;
+  src: url('./LibreBaskerville-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Raleway';
+  font-weight: normal;
+  font-style: normal;
+  src: url('./Raleway-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-weight: 700;
+  font-style: bold;
+  src: url('./LibreBaskerville-Bold.ttf')
+}
+
+@font-face {
+  font-family: 'Raleway';
+  font-weight: 700;
+  font-style: bold;
+  src: url('./Raleway-Bold.ttf')
+}

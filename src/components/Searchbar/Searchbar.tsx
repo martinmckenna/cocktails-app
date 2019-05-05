@@ -4,9 +4,11 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import React from 'react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
+
+import Button from 'src/components/Button';
 
 type ClassNames = 'root';
 
@@ -49,8 +51,6 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     loading,
     handleSelect,
     handleSubmit,
-    classes,
-    query,
     setQuery
   } = props;
 
@@ -105,8 +105,26 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       isLoading={loading}
       isClearable={true}
       onChange={handleSelect}
+      components={{
+        MenuList: componentProps =>
+          _Menu({ ...componentProps, handleSubmit: props.handleSubmit })
+      }}
       {...props}
     />
+  );
+};
+
+const _Menu: React.FC<any> = props => {
+  return (
+    <React.Fragment>
+      <components.MenuList {...props}>{props.children}</components.MenuList>
+      <Button
+        style={{ width: '100%', padding: '1em' }}
+        onClick={props.handleSubmit}
+      >
+        Search
+      </Button>
+    </React.Fragment>
   );
 };
 

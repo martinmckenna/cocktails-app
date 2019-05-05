@@ -30,7 +30,7 @@ const LandingError: React.SFC<CombinedProps> = props => {
   return (
     <div className={props.classes.root}>
       <ThumbDown style={{ width: '75px', height: '75px' }} />
-      <Typography>{props.message}</Typography>
+      <Typography variant="h6">{props.message}</Typography>
     </div>
   );
 };

@@ -50,5 +50,5 @@ export const createCocktail = (payload: CreatePayload) => {
   return request(`/cocktails`, {
     method: 'POST',
     data: payload
-  }).then((response: AxiosResponse<Cocktail>) => response.data);
+  }).then((response: AxiosResponse<Cocktail[]>) => response.data);
 };

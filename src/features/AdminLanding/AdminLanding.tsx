@@ -7,7 +7,7 @@ import { RouteComponentProps, Router } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
 
-import Button from '@material-ui/core/Button';
+import Button from 'src/components/Button';
 import CreateCocktailForm from './CreateForms/CreateCocktail';
 import CreateIngredientForm from './CreateForms/CreateIngredient';
 

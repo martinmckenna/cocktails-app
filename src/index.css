@@ -19,10 +19,31 @@ body {
 
 .react-select__control {
   padding: .5em;
+  border-radius: 0 !important;
+}
+
+.react-select__control:focus {
+  outline: 1px solid rgba(0,107,224,.98) !important;
 }
 
 a {
   text-decoration: none;
+}
+
+p,
+div,
+span {
+  font-family: 'Libre Baskerville',Arial,serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button {
+  font-family: 'Raleway',Arial,sans-serif;
 }
 
 /* *:focus {

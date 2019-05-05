@@ -38,7 +38,7 @@ const LandingLoading: React.FC<CombinedProps> = props => {
   return isVisible ? (
     <div className={props.classes.root}>
       <CircularProgress style={{ width: '75px', height: '75px' }} />
-      {props.message && <Typography>{props.message}</Typography>}
+      {props.message && <Typography variant="h6">{props.message}</Typography>}
     </div>
   ) : (
     <React.Fragment />
