@@ -7,6 +7,7 @@ import theme from './theme';
 
 import store from 'src/store';
 
+import _404 from 'src/components/404';
 import Admin from 'src/features/AdminLanding';
 import CocktailDetail from 'src/features/CocktailDetail';
 import Contact from 'src/features/Contact';
@@ -36,6 +37,7 @@ class App extends Component {
               <Admin path="admin/*" />
               <CocktailDetail path="cocktails/:id" />
               <Contact path="contact" />
+              <_404 default />
             </Router>
             <Footer />
           </MuiThemeProvider>
