@@ -42,7 +42,7 @@ const Header: React.SFC<CombinedProps> = props => {
           Home
         </Button>
       </Grid>
-      {!isProduction && (
+      {isProduction ? (
         <Grid item className={classes.profile} xs={9}>
           {/* <Button variant="primary">
             My Profile
@@ -50,6 +50,12 @@ const Header: React.SFC<CombinedProps> = props => {
           <Button onClick={goToAdmin} variant="primary" plain>
             Admin
           </Button>
+          <Button variant="primary" onClick={goToContact} plain>
+            Contact
+          </Button>
+        </Grid>
+      ) : (
+        <Grid item className={classes.profile} xs={9}>
           <Button variant="primary" onClick={goToContact} plain>
             Contact
           </Button>
