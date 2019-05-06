@@ -42,7 +42,7 @@ const Header: React.SFC<CombinedProps> = props => {
           Home
         </Button>
       </Grid>
-      {isProduction ? (
+      {!isProduction ? (
         <Grid item className={classes.profile} xs={9}>
           {/* <Button variant="primary">
             My Profile

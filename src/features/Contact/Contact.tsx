@@ -71,7 +71,6 @@ const Contact: React.FC<CombinedProps> = props => {
         initialValues={{
           name: '',
           email: '',
-          quiz: '',
           desc: ''
         }}
         validationSchema={contactSchema}
