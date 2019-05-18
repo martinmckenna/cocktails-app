@@ -9,6 +9,7 @@ type ClassNames = 'root' | 'section' | 'buttonWrapper';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     display: 'flex',
+    padding: theme.spacing.unit * 2,
     flexDirection: 'column',
     '&>*': {
       width: '75%',

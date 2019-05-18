@@ -12,7 +12,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     width: '100%',
     height: 'auto',
-    padding: theme.spacing.unit
+    // padding: theme.spacing.unit,
+    outline: '2px solid black'
   }
 });
 

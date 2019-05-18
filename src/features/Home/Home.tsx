@@ -202,13 +202,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
             placeholder='Search ingredients (e.g "Vodka" or "Orange Juice")'
           />
         </Grid>
-        <Button
-          className={classes.searchButton}
-          onClick={this.handleSubmit}
-          style={{ marginTop: '1em' }}
-        >
-          Search
-        </Button>
         <Grid item xs={12} className={classes.checkbox}>
           <Checkbox
             onChange={this.toggleWillShop}
@@ -219,6 +212,13 @@ class Home extends React.PureComponent<CombinedProps, State> {
             // you could make with additional ingredients, check this box.`}
           />
         </Grid>
+        <Button
+          className={classes.searchButton}
+          onClick={this.handleSubmit}
+          style={{ marginTop: '1em' }}
+        >
+          Search
+        </Button>
       </Grid>
     );
   }

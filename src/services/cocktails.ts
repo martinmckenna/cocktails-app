@@ -101,3 +101,9 @@ export const getCocktailImages = (query: string) => {
     }
   });
 };
+
+export const deleteCocktail = (id: number) => {
+  return request(`/cocktails/${id}`, {
+    method: 'DELETE'
+  }).then((response: AxiosResponse<{}>) => response.data);
+};
