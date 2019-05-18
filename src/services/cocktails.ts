@@ -1,5 +1,7 @@
-import { AxiosResponse } from 'axios';
+import Axios, { AxiosResponse } from 'axios';
+import { unescape } from 'he';
 import { stringify } from 'querystring';
+import { imgurToken } from 'src/constants';
 import request from './request';
 import { Cocktail, PaginatedData } from './types';
 
@@ -57,4 +59,45 @@ export const createCocktail = (payload: CreatePayload) => {
     method: 'POST',
     data: payload
   }).then((response: AxiosResponse<Cocktail[]>) => response.data);
+};
+
+interface ImgurImg {
+  id: string;
+  title: string;
+  description: string | null;
+  height: number;
+  width: number;
+  link: string;
+}
+
+interface ImgurWrapper {
+  data: ImgurImg[];
+  success: boolean;
+  status: number;
+}
+
+export const getCocktailImages = (query: string) => {
+  return Axios('https://api.imgur.com/3/gallery/search/top/', {
+    method: 'GET',
+    params: {
+      q_all: `${query}`,
+      q_type: 'jpg',
+      // q_size_px: 'small',
+      q_not: 'cupcakes me'
+    },
+    headers: {
+      Authorization: `Client-ID ${imgurToken}`
+    }
+  }).then((response: AxiosResponse<ImgurWrapper>) => {
+    try {
+      return response.data.data.length === 0
+        ? response.data.data
+        : response.data.data.map(eachImage => ({
+            ...eachImage,
+            link: unescape(eachImage.link)
+          }));
+    } catch (e) {
+      throw new Error(e);
+    }
+  });
 };

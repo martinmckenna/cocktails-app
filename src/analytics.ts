@@ -29,14 +29,12 @@ export const initAnalytics = () => {
     return;
   }
 
-  const gaId = isProduction ? 'UA-88950785-4' : analyticsCode;
-
   const url = isProduction
     ? 'https://www.google-analytics.com/analytics.js'
     : 'https://www.google-analytics.com/analytics_debug.js';
 
   gaInit(window, document, 'script', url, 'ga', {}, {});
 
-  (window as any).ga('create', gaId, 'auto');
+  (window as any).ga('create', analyticsCode, 'auto');
   (window as any).ga('send', 'pageview');
 };
