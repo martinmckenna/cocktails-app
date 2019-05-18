@@ -103,7 +103,9 @@ const Contact: React.FC<CombinedProps> = props => {
                 inputComponent="textarea"
                 rows={5}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" isLoading={loading}>
+                Submit
+              </Button>
             </Form>
           );
         }}

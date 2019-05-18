@@ -3,6 +3,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import classnames from 'classnames';
 import React from 'react';
 import { compose } from 'recompose';
 
@@ -12,6 +13,7 @@ type ClassNames =
   | 'root'
   | 'secondary'
   | 'primary'
+  | 'disabled'
   | 'primaryAddit'
   | 'secondaryAddit';
 
@@ -74,6 +76,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '-ms-transform': 'translateY(3px)',
       transform: 'translateY(3px)'
     }
+  },
+  disabled: {
+    backgroundColor: '#EDEDED',
+    color: '#000',
+    '-webkit-box-shadow': '0 7px 0px 0px #949494',
+    boxShadow: '0 7px 0px 0px #949494'
   }
 });
 
@@ -103,10 +111,15 @@ const Button: React.SFC<CombinedProps> = props => {
   return (
     <_Button
       {...rest}
-      className={`${props.className} ${
-        classes.root
-      } ${className} ${additional}`}
+      className={classnames({
+        [props.className!]: !!props.className,
+        [classes.root]: true,
+        [className]: true,
+        [additional]: true,
+        [classes.disabled]: !!props.isLoading || !!props.disabled
+      })}
       disableRipple={true}
+      disabled={isLoading}
     >
       {isLoading ? 'Loading...' : children}
     </_Button>
