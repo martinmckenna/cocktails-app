@@ -51,7 +51,7 @@ const Container: React.FC<CombinedProps> = props => {
           Barcart
         </Typography>
         <Typography>
-          Search by {type === 'byCocktail' ? 'cocktail' : 'ingredients'}
+          Search by {type === 'byCocktail' ? 'cocktail name' : 'ingredients'}
           <Link
             to={type === 'byCocktail' ? '/?type=byIng' : '/?type=byCocktail'}
           >
