@@ -12,7 +12,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     position: 'absolute',
-    bottom: -150,
+    bottom: 0,
     left: 0,
     height: '50px',
     paddingRight: theme.spacing.unit,
@@ -22,7 +22,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%',
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    textAlign: 'right'
+    textAlign: 'right',
+    [theme.breakpoints.down('sm')]: {
+      bottom: -75
+    }
   }
 });
 
