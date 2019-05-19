@@ -108,7 +108,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
         getCocktailImages(response.name)
           .then(listOfImages => {
             setImageLoading(false);
-            // setImageSrc(listOfImages[0].link);
+            // setImageSrc(listOfImages[1].link);
           })
           .catch(e => {
             setImageError('There was an error loading this image.');

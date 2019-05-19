@@ -51,12 +51,12 @@ const Container: React.FC<CombinedProps> = props => {
           Barcart
         </Typography>
         <Typography>
-          Search by {type === 'byCocktail' ? 'cocktail' : 'ingredient'}
+          Search by {type === 'byCocktail' ? 'cocktail' : 'ingredients'}
           <Link
             to={type === 'byCocktail' ? '/?type=byIng' : '/?type=byCocktail'}
           >
             {' '}
-            or by {type === 'byCocktail' ? 'ingredients.' : 'cocktail.'}
+            or by {type === 'byCocktail' ? 'ingredients.' : 'cocktail name.'}
           </Link>
         </Typography>
       </Grid>

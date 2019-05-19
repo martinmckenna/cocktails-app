@@ -20,7 +20,7 @@ import {
 
 import { Field, Form, Formik } from 'formik';
 
-type ClassNames = 'root' | 'form';
+type ClassNames = 'root' | 'form' | 'desc';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -36,6 +36,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       marginTop: theme.spacing.unit,
       marginBottom: theme.spacing.unit
     }
+  },
+  desc: {
+    paddingTop: theme.spacing.unit * 1.5
   }
 });
 
@@ -96,6 +99,7 @@ const Contact: React.FC<CombinedProps> = props => {
               />
               <TextField
                 error={errors.desc}
+                inputClass={classes.desc}
                 value={values.desc}
                 name="desc"
                 onChange={handleChange}

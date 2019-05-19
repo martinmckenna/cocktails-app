@@ -23,18 +23,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props extends Omit<InputBaseProps, 'error'> {
   error?: string;
+  inputClass?: string;
 }
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
 const TextField: React.SFC<CombinedProps> = props => {
-  const { classes, error, ...rest } = props;
+  const { classes, inputClass, error, ...rest } = props;
   return (
     <React.Fragment>
       <_TextField
         {...rest}
         classes={{
-          input: classes.input
+          input: `${classes.input} ${inputClass}`
         }}
       />
       {props.error && <p style={{ color: 'red' }}>{props.error}</p>}

@@ -89,6 +89,7 @@ export const getCocktailImages = (query: string) => {
       // q_or: `cocktail drink`,
       q_type: 'jpg',
       // q_size_px: 'huge',
+      // window: 'year',
       q_not: 'cupcakes me'
     },
     headers: {
