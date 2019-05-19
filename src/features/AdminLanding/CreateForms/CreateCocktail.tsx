@@ -26,39 +26,22 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
-const glasses: Option<string, string>[] = [
-  {
-    label: 'Rocks',
-    value: 'Rocks'
-  },
-  {
-    label: 'Highball',
-    value: 'Highball'
-  },
-  {
-    label: 'Snifter',
-    value: 'Snifter'
-  },
-  {
-    label: 'Champagne Flute',
-    value: 'Champagne Flute'
-  }
+const glasses: string[] = [
+  'Rocks',
+  'Highball',
+  'Snifter',
+  'Champagne Flute',
+  'Margarita Glass',
+  'Martini Glasss'
 ];
 
-const actions: Option<ActionType, ActionType>[] = [
-  {
-    label: 'Add',
-    value: 'Add'
-  },
-  {
-    label: 'Muddle',
-    value: 'Muddle'
-  },
-  {
-    label: 'Squeeze',
-    value: 'Squeeze'
-  }
-];
+const actions: string[] = ['Add', 'Muddle', 'Squeeze', 'Garnish', 'Rim'];
+
+const createOptions = (list: string[]): Option<string, string>[] =>
+  list.map(eachOption => ({
+    label: eachOption,
+    value: eachOption
+  }));
 
 const finishes: Option<Finishes, Finishes>[] = [
   {
@@ -186,7 +169,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
         placeholder="Enter Cocktail Name"
       />
       <Select
-        options={glasses}
+        options={createOptions(glasses)}
         handleSelect={(value: Option<GlassType, GlassType>) =>
           setGlass(value.label)
         }
@@ -226,7 +209,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
                 placeholder="Enter Number of Parts"
               />
               <Select
-                options={actions}
+                options={createOptions(actions)}
                 handleSelect={(value: Option<ActionType, ActionType>) => {
                   setActions(assocPath([index], value.label, selectedActions));
                 }}

@@ -17,7 +17,7 @@ export const getIngredients = (params?: IngredientsParams) => {
 
 interface CreateParams {
   name: string;
-  ing_type: IngTypes;
+  ing_type: string;
 }
 
 export const createIngredient = (payload: CreateParams) => {

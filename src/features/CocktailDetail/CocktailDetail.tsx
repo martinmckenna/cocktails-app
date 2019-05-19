@@ -108,7 +108,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
         getCocktailImages(response.name)
           .then(listOfImages => {
             setImageLoading(false);
-            setImageSrc(listOfImages[0].link);
+            // setImageSrc(listOfImages[0].link);
           })
           .catch(e => {
             setImageError('There was an error loading this image.');
@@ -161,7 +161,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
                     eachIng.action.substr(1)}{' '}
                   {eachIng.ounces === 0
                     ? eachIng.name
-                    : eachIng.ounces > 1
+                    : eachIng.ounces !== 1
                     ? `${eachIng.ounces} parts ${eachIng.name}`
                     : `${eachIng.ounces} part ${eachIng.name}`}
                 </Typography>

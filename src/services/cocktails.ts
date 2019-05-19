@@ -40,6 +40,11 @@ export const getCocktails = (payload: CocktailParams) => {
     will_shop: willShop || false,
     page: page || 1
   };
+
+  if (!params.ing_list) {
+    delete params.ing_list;
+  }
+
   return request(`/cocktails?${stringify(params)}`).then(
     (response: AxiosResponse<PaginatedData<Cocktail>>) => response.data
   );

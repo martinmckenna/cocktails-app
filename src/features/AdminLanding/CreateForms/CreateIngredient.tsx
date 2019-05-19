@@ -16,29 +16,27 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 interface State {
   ingName: string;
-  ingType: IngTypes;
+  ingType: string;
   isCreatingIngredient: boolean;
   error?: APIError;
 }
 
-const options: Option<IngTypes, IngTypes>[] = [
-  {
-    value: 'Liquor',
-    label: 'Liquor'
-  },
-  {
-    value: 'Fruit',
-    label: 'Fruit'
-  },
-  {
-    value: 'Juice',
-    label: 'Juice'
-  },
-  {
-    value: 'Misc',
-    label: 'Misc'
-  }
+const types: string[] = [
+  'Liquor',
+  'Liqueur',
+  'Fruit',
+  'Juice',
+  'Garnish',
+  'Mixer',
+  'Bitters',
+  'Wine',
+  'Misc'
 ];
+
+const options: Option<string, string>[] = types.map(eachType => ({
+  label: eachType,
+  value: eachType
+}));
 
 type CombinedProps = RouteComponentProps & FormStyleProps & WithSnackbarProps;
 

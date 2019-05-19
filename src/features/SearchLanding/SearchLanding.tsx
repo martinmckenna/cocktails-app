@@ -24,7 +24,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'row',
     flexFlow: 'row wrap',
     justifyContent: 'space-between',
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
+    '& > a': {
+      flexGrow: 1
+    }
   }
 });
 

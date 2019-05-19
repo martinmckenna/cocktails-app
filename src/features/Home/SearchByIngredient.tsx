@@ -4,7 +4,6 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import { RouteComponentProps } from '@reach/router';
 import { stringify } from 'querystring';
 import React from 'react';
@@ -20,24 +19,9 @@ import { APIError } from '../../services/types';
 
 import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
-type ClassNames =
-  | 'root'
-  | 'header'
-  | 'searchbar'
-  | 'checkbox'
-  | 'searchButton'
-  | 'blurb';
+type ClassNames = 'searchbar' | 'checkbox' | 'searchButton' | 'blurb';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    width: '85%',
-    margin: '0 auto',
-    paddingTop: theme.spacing.unit * 3
-  },
-  header: {
-    textAlign: 'center',
-    color: '#000'
-  },
   searchbar: {
     textAlign: 'center',
     marginTop: theme.spacing.unit * 3
@@ -176,16 +160,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
     const { loading, dropDownData, classes } = this.props;
 
     return (
-      <Grid container className={classes.root}>
-        <Grid item xs={12}>
-          <Typography variant="h2" className={classes.header}>
-            Barcart
-          </Typography>
-        </Grid>
-        {/* <Typography variant="subtitle1" className={classes.blurb}>
-          Start by searching for ingredients on your shelf and see results for
-          cocktails you can make
-        </Typography> */}
+      <React.Fragment>
         <Grid className={classes.searchbar} item xs={12}>
           <Searchbar
             filterIce
@@ -219,7 +194,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
         >
           Search
         </Button>
-      </Grid>
+      </React.Fragment>
     );
   }
 }
