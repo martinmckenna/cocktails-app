@@ -81,8 +81,9 @@ export const getCocktailImages = (query: string) => {
     method: 'GET',
     params: {
       q_all: `${query}`,
+      // q_or: `cocktail drink`,
       q_type: 'jpg',
-      // q_size_px: 'small',
+      // q_size_px: 'huge',
       q_not: 'cupcakes me'
     },
     headers: {

@@ -25,14 +25,21 @@ import Error from 'src/components/LandingError';
 import Loading from 'src/components/LandingLoading';
 import LazyImage from 'src/components/LazyImage';
 
-type ClassNames = 'root' | 'details' | 'steps' | 'deleteBtn';
+type ClassNames = 'root' | 'details' | 'steps' | 'deleteBtn' | 'imageWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     // padding: theme.spacing.unit,
     '& > div:first-child': {
       padding: theme.spacing.unit * 3
+    },
+    '& > div': {
+      flexGrow: 1
     }
+  },
+  imageWrapper: {
+    margin: '0 auto',
+    width: '50%'
   },
   details: {
     padding: theme.spacing.unit * 3,
@@ -114,7 +121,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
       });
   }, []);
 
-  if (loading || imageLoading) {
+  if (loading) {
     return <Loading message="Fetching this cocktail" />;
   }
 
@@ -133,6 +140,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
       <Grid container className={props.classes.root}>
         <Grid item md={7} sm={12}>
           <LazyImage
+            rootClass={props.classes.imageWrapper}
             src={imageSrc}
             imageError={imageError}
             imageLoading={imageLoading}
