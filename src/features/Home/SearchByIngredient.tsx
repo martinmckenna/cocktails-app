@@ -58,7 +58,7 @@ interface State {
 
 class Home extends React.PureComponent<CombinedProps, State> {
   state: State = {
-    willShop: false
+    willShop: true
   };
   componentDidMount() {
     /** pre-poplate the GET /cocktails filter with ice */
@@ -181,7 +181,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
           <Checkbox
             onChange={this.toggleWillShop}
             checked={this.state.willShop}
-            label="I want to see suggestions for non-perfect matches"
+            label="I want to see cocktail suggestions, even though I only have the partial requirements."
             // helperText={`For example, if you only have Gin, but you'd still
             // like to see suggestions for a Gin and Tonic and other drinks
             // you could make with additional ingredients, check this box.`}
