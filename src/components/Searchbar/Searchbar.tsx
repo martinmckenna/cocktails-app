@@ -183,6 +183,6 @@ const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props & SelectProps>(
   withSearchFunctions,
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(Searchbar);

@@ -1,6 +1,6 @@
 import Typography from '@material-ui/core/Typography';
 import { navigate, RouteComponentProps } from '@reach/router';
-import { assocPath } from 'ramda';
+import { assocPath, equals } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
@@ -62,11 +62,11 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   const [finish, setFinish] = React.useState<Finishes>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [isSearchingIngredient, setIsSearchingIngredient] = React.useState<
-    boolean
-  >(false);
-  const [dropDownOptions, setDropDownOptions] = React.useState<ResolvedData[]>(
-    []
-  );
+    Record<number, boolean>
+  >({});
+  const [dropDownOptions, setDropDownOptions] = React.useState<
+    Record<number, ResolvedData[]>
+  >([]);
   const [ingredientsCount, setIngredientsCount] = React.useState<number>(1);
   const [ingredientIds, setIngredientIds] = React.useState<
     Record<string, number>
@@ -77,29 +77,40 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   >({});
   const [error, setError] = React.useState<APIError | undefined>(undefined);
 
-  const fetchIngredient = (value: string) => {
+  const fetchIngredient = (value: string, index: number) => {
     return getIngredients({
       name: value
     })
       .then(response => {
         const firstFive = {
           ...response,
-          data: response.data.filter((eachIng, index) => index <= 5)
+          data: response.data.filter((eachIng, filterInd) => filterInd < 5)
         };
-        setIsSearchingIngredient(false);
-        setDropDownOptions(transformAPIResponseToReactSelect(firstFive));
+
+        setIsSearchingIngredient(
+          assocPath([index], false, isSearchingIngredient)
+        );
+        setDropDownOptions(
+          assocPath(
+            [index],
+            transformAPIResponseToReactSelect(firstFive),
+            dropDownOptions
+          )
+        );
       })
       .catch((e: Error) => {
-        setIsSearchingIngredient(false);
+        setIsSearchingIngredient(
+          assocPath([index], false, isSearchingIngredient)
+        );
         setDropDownOptions([]);
       });
   };
 
   const debouncedFetch = debounce(400, false, fetchIngredient);
 
-  const handleSearch = (value: string) => {
-    setIsSearchingIngredient(true);
-    debouncedFetch(value);
+  const handleSearch = (value: string, index: number) => {
+    setIsSearchingIngredient(assocPath([index], true, isSearchingIngredient));
+    debouncedFetch(value, index);
   };
 
   /*
@@ -121,7 +132,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   };
 
   const handleCreateCocktail = () => {
-    setLoading(true);
+    // setLoading(true);
     setError(undefined);
 
     const ingPayload: POSTIngredient[] = Object.keys(ingredientIds).map(
@@ -134,6 +145,8 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
         };
       }
     );
+
+    return console.log(ingPayload);
 
     createCocktail({
       name: label,
@@ -185,45 +198,21 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
       {Array.apply(null, Array(ingredientsCount)).map(
         (eachIteration, index) => {
           return (
-            <div className={classes.section} key={index}>
-              <Typography variant="h6">Ingredient {index + 1}</Typography>
-              <Searchbar
-                className="react-select-container"
-                classNamePrefix="react-select"
-                // handleSubmit={() => null}
-                dropDownOptions={dropDownOptions}
-                loading={isSearchingIngredient}
-                handleChange={handleSearch}
-                handleSelect={(value, action) =>
-                  handleChange(value, action, index)
-                }
-                loadingMessage={() => 'Fetching ingredients...'}
-                noOptionsMessage={() => 'No Ingredients Found'}
-                placeholder="Search for an ingredient"
-              />
-              <TextField
-                type="number"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setOunces(assocPath([index], e.target.value, ounces))
-                }
-                placeholder="Enter Number of Parts"
-              />
-              <Select
-                options={createOptions(actions)}
-                handleSelect={(value: Option<ActionType, ActionType>) => {
-                  setActions(assocPath([index], value.label, selectedActions));
-                }}
-                defaultOption="Select Action"
-              />
-              {index > 0 && (
-                <Button
-                  onClick={() => setIngredientsCount(ingredientsCount - 1)}
-                  variant="secondary"
-                >
-                  Remove Ingredient
-                </Button>
-              )}
-            </div>
+            <Form
+              key={index}
+              index={index}
+              ingredientsCount={ingredientsCount}
+              setIngredientsCount={setIngredientsCount}
+              ounces={ounces}
+              setOunces={setOunces}
+              selectedActions={selectedActions}
+              setActions={setActions}
+              handleChange={handleChange}
+              handleSearch={handleSearch}
+              dropDownOptions={dropDownOptions[index]}
+              isFetchingIngredient={isSearchingIngredient[index]}
+              className={classes.section}
+            />
           );
         }
       )}
@@ -240,7 +229,108 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
 };
 
 export default compose<CombinedProps, RouteComponentProps>(
-  withFormStyles,
+  React.memo,
   withSnackbar,
-  React.memo
+  withFormStyles
 )(CreateCocktail);
+
+interface FormProps {
+  setIngredientsCount: (count: number) => void;
+  handleSearch: (value: string, index: number) => void;
+  index: number;
+  ounces: Record<string, number>;
+  setOunces: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  selectedActions: Record<string, ActionType>;
+  setActions: React.Dispatch<React.SetStateAction<Record<string, ActionType>>>;
+  handleChange: (values: ResolvedData, { action }: any, index: number) => void;
+  dropDownOptions: ResolvedData[];
+  isFetchingIngredient: boolean;
+  ingredientsCount: number;
+  className?: string;
+}
+
+const Form: React.FC<FormProps> = React.memo(
+  props => {
+    const {
+      index,
+      dropDownOptions,
+      ounces,
+      handleSearch,
+      ingredientsCount,
+      setActions,
+      selectedActions,
+      isFetchingIngredient,
+      handleChange,
+      setOunces,
+      setIngredientsCount,
+      className
+    } = props;
+
+    const _setOunces = (e: React.ChangeEvent<HTMLInputElement>) => {
+      return setOunces(assocPath([index], e.target.value, ounces));
+    };
+
+    const _setActions = (value: Option<ActionType, ActionType>) => {
+      return setActions(assocPath([index], value.label, selectedActions));
+    };
+
+    const removeIngredient = () => {
+      return setIngredientsCount(ingredientsCount - 1);
+    };
+
+    const handleChangeInput = (value: any, action: any) => {
+      return handleChange(value, action, index);
+    };
+
+    const _handleSearch = (value: string) => {
+      return handleSearch(value, index);
+    };
+
+    return (
+      <div className={className} key={index}>
+        <Typography variant="h6">Ingredient {index + 1}</Typography>
+        <Searchbar
+          className="react-select-container"
+          classNamePrefix="react-select"
+          dropDownOptions={dropDownOptions}
+          loading={isFetchingIngredient}
+          handleChange={_handleSearch}
+          handleSelect={handleChangeInput}
+          loadingMessage={() => 'Fetching ingredients...'}
+          noOptionsMessage={() => 'No Ingredients Found'}
+          placeholder="Search for an ingredient"
+        />
+        <TextField
+          type="number"
+          onChange={_setOunces}
+          placeholder="Enter Number of Parts"
+        />
+        <Select
+          options={createOptions(actions)}
+          handleSelect={_setActions}
+          defaultOption="Select Action"
+        />
+        {index > 0 && (
+          <Button onClick={removeIngredient} variant="secondary">
+            Remove Ingredient
+          </Button>
+        )}
+      </div>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      equals(
+        prevProps.selectedActions[prevProps.index],
+        nextProps.selectedActions[nextProps.index]
+      ) &&
+      equals(
+        prevProps.ounces[prevProps.index],
+        nextProps.ounces[nextProps.index]
+      ) &&
+      equals(prevProps.ingredientsCount, nextProps.ingredientsCount) &&
+      equals(prevProps.isFetchingIngredient, nextProps.isFetchingIngredient) &&
+      equals(prevProps.dropDownOptions, nextProps.dropDownOptions)
+    );
+  }
+);

@@ -3,6 +3,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import { equals } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
 
@@ -45,7 +46,12 @@ const TextField: React.SFC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
+const memoized = (component: React.FC<CombinedProps>) =>
+  React.memo(component, (prevProps, nextProps) => {
+    return equals(prevProps.error, nextProps.error);
+  });
+
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  memoized,
+  styled
 )(TextField);
