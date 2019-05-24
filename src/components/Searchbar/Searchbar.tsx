@@ -3,10 +3,11 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import { equals } from 'ramda';
 import React from 'react';
 import Select, { components } from 'react-select';
 import { Props as SelectProps } from 'react-select/lib/Select';
-import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
+import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
 
@@ -49,13 +50,11 @@ interface Props {
   handleSelect: (value: any, action: any) => void;
   handleSubmit?: () => void;
   filterIce?: boolean;
+  ingredientsCount?: number;
+  index?: number;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  SearchState &
-  SearchStateSetters &
-  SelectProps;
+type CombinedProps = Props & WithStyles<ClassNames> & SelectProps;
 
 const Searchbar: React.SFC<CombinedProps> = props => {
   const {
@@ -63,10 +62,20 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     dropDownOptions,
     loading,
     handleSelect,
-    handleSubmit,
-    setQuery
-    // query,
+    handleSubmit
   } = props;
+
+  const [query, setQuery] = React.useState<string>('');
+
+  const inputRef = React.useCallback(
+    node => {
+      const { ingredientsCount, index } = props;
+      if (node && ingredientsCount && index && ingredientsCount === index + 1) {
+        node.focus();
+      }
+    },
+    [props.ingredientsCount]
+  );
 
   const onInputChange = (value: string, action: any) => {
     /** don't clear the input when we blur the input field */
@@ -115,14 +124,15 @@ const Searchbar: React.SFC<CombinedProps> = props => {
   return (
     <Select
       styles={customStyles}
-      onBlur={() => null}
       onKeyDown={handleKeyDown}
-      inputValue={props.query}
+      inputValue={query}
+      key={props.index || 0}
       options={filteredOptions as any}
       name="ingredients"
       onInputChange={onInputChange}
       isLoading={loading}
       isClearable={true}
+      ref={inputRef}
       onChange={handleSelect}
       components={{
         MenuList: componentProps =>
@@ -160,29 +170,18 @@ const _Menu: React.FC<any> = props => {
   );
 };
 
-interface SearchState {
-  query: string;
-}
-
-interface SearchStateSetters {
-  setQuery: (query: string) => void;
-}
-
-type StateAndSetters = StateHandlerMap<SearchState> & SearchStateSetters;
-
-const withSearchFunctions = withStateHandlers<SearchState, StateAndSetters, {}>(
-  {
-    query: ''
-  },
-  {
-    setQuery: () => query => ({ query })
-  }
-);
-
 const styled = withStyles(styles);
 
+const memoized = (component: React.FC<CombinedProps>) =>
+  React.memo(component, (prevProps, nextProps) => {
+    return (
+      equals(prevProps.dropDownOptions, nextProps.dropDownOptions) &&
+      prevProps.loading === nextProps.loading &&
+      prevProps.ingredientsCount === nextProps.ingredientsCount
+    );
+  });
+
 export default compose<CombinedProps, Props & SelectProps>(
-  withSearchFunctions,
-  React.memo,
+  memoized,
   styled
 )(Searchbar);
