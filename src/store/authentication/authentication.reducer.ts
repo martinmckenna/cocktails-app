@@ -16,24 +16,31 @@ export const initialState: State = {
 };
 
 const reducer = reducerWithInitialState(initialState)
-  .caseWithAction(handleLogin.started, (state, action) => {
+  .case(handleLogin.started, state => {
     return {
-      ...state
+      ...state,
+      isLoggingIn: true
     };
   })
   .caseWithAction(handleLogin.done, (state, action) => {
     return {
-      ...state
+      ...state,
+      isLoggingIn: false,
+      token: action.payload.result
     };
   })
   .caseWithAction(handleLogin.failed, (state, action) => {
     return {
-      ...state
+      ...state,
+      isLoggingIn: false,
+      loginError: action.payload.error
     };
   })
-  .caseWithAction(handleLogout, (state, action) => {
+  .case(handleLogout, state => {
     return {
-      ...state
+      ...state,
+      token: '',
+      isLoggingIn: false
     };
   })
   .default(state => ({ ...state }));

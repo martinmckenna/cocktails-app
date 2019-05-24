@@ -5,8 +5,14 @@ import {
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { RouteComponentProps } from '@reach/router';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
+
+import { APIError } from 'src/services/types';
+import { MapDispatchToProps, MapStateToProps } from 'src/store';
+import { handleLogin } from 'src/store/authentication/authentication.requests';
 
 import Button from 'src/components/Button';
 import TextField from 'src/components/TextField';
@@ -33,23 +39,92 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps;
+type CombinedProps = WithStyles<ClassNames> &
+  RouteComponentProps &
+  DispatchProps &
+  ReduxProps &
+  WithSnackbarProps;
 
 const Login: React.SFC<CombinedProps> = props => {
-  const { classes } = props;
+  const { classes, _handleLogin, isLoggingIn, loginError } = props;
+
+  const [username, setUsername] = React.useState<string>('');
+  const [password, setPassword] = React.useState<string>('');
+
+  const handleSubmit = (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
+    _handleLogin(username, password)
+      .then(response => {
+        props.navigate!('/');
+      })
+      .catch((e: APIError) => {
+        props.enqueueSnackbar(e.error, {
+          variant: 'error'
+        });
+      });
+  };
+
   return (
-    <div className={classes.root}>
+    <form className={classes.root}>
       <Typography variant="h3">Login</Typography>
-      <TextField label="Username" placeholder="Email" />
-      <TextField label="Password" type="password" placeholder="Password" />
-      <Button variant="primary">Login</Button>
-    </div>
+      <TextField
+        onChange={e => setUsername(e.target.value)}
+        label="Username"
+        placeholder="Username"
+      />
+      <TextField
+        onChange={e => setPassword(e.target.value)}
+        label="Password"
+        type="password"
+        placeholder="Password"
+      />
+      <Button
+        type="submit"
+        variant="primary"
+        onClick={handleSubmit}
+        isLoading={isLoggingIn}
+      >
+        Login
+      </Button>
+    </form>
   );
 };
 
 const styled = withStyles(styles);
 
+interface ReduxProps {
+  isLoggingIn: boolean;
+  loginError?: APIError;
+}
+
+interface DispatchProps {
+  _handleLogin: (username: string, password: string) => Promise<string>;
+}
+
+const mapStateToProps: MapStateToProps<ReduxProps, RouteComponentProps> = (
+  state,
+  ownProps
+) => ({
+  isLoggingIn: state.authState.isLoggingIn,
+  loginError: state.authState.loginError
+});
+
+const mapDispatchToProps: MapDispatchToProps<
+  DispatchProps,
+  RouteComponentProps
+> = dispatch => ({
+  _handleLogin: (username, password) =>
+    dispatch(handleLogin(username, password) as any)
+});
+
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
 export default compose<CombinedProps, RouteComponentProps>(
-  styled,
-  React.memo
+  React.memo,
+  connected,
+  withSnackbar,
+  styled
 )(Login);
