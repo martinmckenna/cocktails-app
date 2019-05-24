@@ -83,6 +83,7 @@ const Contact: React.FC<CombinedProps> = props => {
           return (
             <Form className={classes.form}>
               <TextField
+                label={'Full Name (required)'}
                 error={errors.name}
                 value={values.name}
                 name="name"
@@ -90,6 +91,7 @@ const Contact: React.FC<CombinedProps> = props => {
                 placeholder="Full name (required)"
               />
               <TextField
+                label={'Email (required)'}
                 error={errors.email}
                 value={values.email}
                 name="email"
@@ -98,6 +100,7 @@ const Contact: React.FC<CombinedProps> = props => {
                 placeholder="Email (required)"
               />
               <TextField
+                label={'Description (required)'}
                 error={errors.desc}
                 inputClass={classes.desc}
                 value={values.desc}

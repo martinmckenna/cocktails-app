@@ -3,6 +3,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import { equals } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
@@ -12,7 +13,11 @@ import _TextField, { InputBaseProps } from '@material-ui/core/InputBase';
 type ClassNames = 'root' | 'input';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    '& > div': {
+      width: '100%'
+    }
+  },
   input: {
     [theme.breakpoints.down('xs')]: {
       '&::placeholder': {
@@ -25,14 +30,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props extends Omit<InputBaseProps, 'error'> {
   error?: string;
   inputClass?: string;
+  label?: string;
 }
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
 const TextField: React.SFC<CombinedProps> = props => {
-  const { classes, inputClass, error, ...rest } = props;
+  const { label, className, classes, inputClass, error, ...rest } = props;
   return (
-    <React.Fragment>
+    <div className={`${classes.root} ${className}`}>
+      {label && <Typography>{label}</Typography>}
       <_TextField
         {...rest}
         classes={{
@@ -40,7 +47,7 @@ const TextField: React.SFC<CombinedProps> = props => {
         }}
       />
       {props.error && <p style={{ color: 'red' }}>{props.error}</p>}
-    </React.Fragment>
+    </div>
   );
 };
 

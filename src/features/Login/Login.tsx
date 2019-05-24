@@ -40,8 +40,8 @@ const Login: React.SFC<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       <Typography variant="h3">Login</Typography>
-      <TextField placeholder="Email" />
-      <TextField type="password" placeholder="Password" />
+      <TextField label="Username" placeholder="Email" />
+      <TextField label="Password" type="password" placeholder="Password" />
       <Button variant="primary">Login</Button>
     </div>
   );
