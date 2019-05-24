@@ -7,7 +7,12 @@ export const handleLogin = (
   username: string,
   password: string
 ): ThunkAction<string | APIError> => dispatch => {
-  dispatch(_handleLogin.started);
+  dispatch(
+    _handleLogin.started({
+      username,
+      password
+    })
+  );
 
   return login(username, password)
     .then(response => {

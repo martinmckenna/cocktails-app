@@ -123,8 +123,8 @@ const connected = connect(
 );
 
 export default compose<CombinedProps, RouteComponentProps>(
-  React.memo,
   connected,
   withSnackbar,
+  React.memo,
   styled
 )(Login);
