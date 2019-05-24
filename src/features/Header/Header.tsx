@@ -50,6 +50,9 @@ const Header: React.SFC<CombinedProps> = props => {
           <Button onClick={goToAdmin} variant="primary" plain>
             Admin
           </Button>
+          <Button onClick={goToLogin} variant="primary" plain>
+            Login
+          </Button>
           <Button variant="primary" onClick={goToContact} plain>
             Contact
           </Button>
@@ -67,6 +70,10 @@ const Header: React.SFC<CombinedProps> = props => {
 
 const goHome = () => {
   navigate('/');
+};
+
+const goToLogin = () => {
+  navigate('/login');
 };
 
 const goToAdmin = () => {
