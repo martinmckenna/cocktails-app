@@ -29,7 +29,12 @@ const glasses: string[] = [
   'Snifter',
   'Champagne Flute',
   'Margarita Glass',
-  'Martini Glasss'
+  'Martini Glasss',
+  'Old-Fashioned Glass',
+  'Irish Coffee Glass',
+  'Hurricane Glass',
+  'White Wine Glass',
+  'Red Wine Glass'
 ];
 
 const createOptions = (list: string[]): Option<string, string>[] =>
@@ -44,8 +49,16 @@ const finishes: Option<Finishes, Finishes>[] = [
     value: 'shaken'
   },
   {
+    label: 'Shaken with Ice',
+    value: 'Shaken with Ice'
+  },
+  {
     label: 'Stirred',
     value: 'stirred'
+  },
+  {
+    label: 'Stirred with Ice',
+    value: 'stirred with Ice'
   }
 ];
 

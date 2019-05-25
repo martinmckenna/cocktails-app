@@ -137,6 +137,13 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
 
   const sortedIngs = sortBy(prop('step'))(cocktail.ingredients);
 
+  const isShakenWithIce =
+    cocktail.finish &&
+    cocktail.finish.toLowerCase().includes('shaken with ice');
+  const isStirredWithIce =
+    cocktail.finish &&
+    cocktail.finish.toLowerCase().includes('stirred with ice');
+
   return (
     <React.Fragment>
       <Grid container className={props.classes.root}>
@@ -152,6 +159,15 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
           <Typography variant="h3">{cocktail.name}</Typography>
           <Typography>
             <em>Served in a {cocktail.glass} glass</em>
+          </Typography>
+          <Typography>
+            <em>
+              {isStirredWithIce
+                ? 'Stir with ice. Strain into glass'
+                : isShakenWithIce
+                ? 'Shake with ice. Strain into glass'
+                : ''}
+            </em>
           </Typography>
           <Typography variant="h5">Serving Instructions</Typography>
           <div className={props.classes.steps}>
