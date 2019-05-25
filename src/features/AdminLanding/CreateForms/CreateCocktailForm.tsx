@@ -19,6 +19,8 @@ interface Props {
   setOunces: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   selectedActions: Record<string, ActionType>;
   setActions: React.Dispatch<React.SetStateAction<Record<string, ActionType>>>;
+  unit: Record<string, string>;
+  setUnit: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   handleChange: (values: ResolvedData, { action }: any, index: number) => void;
   ingredientsCount: number;
   className?: string;
@@ -34,6 +36,8 @@ const createOptions = (list: string[]): Option<string, string>[] =>
 
 const actions: string[] = ['Add', 'Muddle', 'Squeeze', 'Garnish', 'Rim'];
 
+const units: string[] = ['Ounce', 'Dash', 'Tablespoon', 'Teaspoon', 'Splash'];
+
 const Form: React.FC<Props> = props => {
   const {
     index,
@@ -45,6 +49,8 @@ const Form: React.FC<Props> = props => {
     loadingMessage,
     noOptionsMessage,
     setOunces,
+    unit,
+    setUnit,
     setIngredientsCount,
     className
   } = props;
@@ -62,6 +68,10 @@ const Form: React.FC<Props> = props => {
 
   const _setActions = (value: Option<ActionType, ActionType>) => {
     return setActions(assocPath([index], value.label, selectedActions));
+  };
+
+  const _setUnit = (value: Option<string, string>) => {
+    return setUnit(assocPath([index], value.label, unit));
   };
 
   const removeIngredient = () => {
@@ -119,11 +129,16 @@ const Form: React.FC<Props> = props => {
         index={index}
         key={index}
       />
+      <Select
+        options={createOptions(units)}
+        handleSelect={_setUnit}
+        defaultOption="Select Unit of Measurement"
+      />
       <TextField
         type="number"
         onChange={_setOunces}
         // label="Ounces"
-        placeholder="Enter Number of Ounces"
+        placeholder="How many servings to your measurement"
       />
       <Select
         options={createOptions(actions)}

@@ -29,7 +29,7 @@ const glasses: string[] = [
   'Snifter',
   'Champagne Flute',
   'Margarita Glass',
-  'Martini Glasss',
+  'Martini Glass',
   'Old-Fashioned Glass',
   'Irish Coffee Glass',
   'Hurricane Glass',
@@ -74,6 +74,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
     Record<string, number>
   >({});
   const [ounces, setOunces] = React.useState<Record<string, number>>({});
+  const [unit, setUnit] = React.useState<Record<string, string>>({});
   const [selectedActions, setActions] = React.useState<
     Record<string, ActionType>
   >({});
@@ -107,6 +108,7 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
           id: ingredientIds[eachIngredientId],
           step: +eachIngredientId + 1,
           ounces: +ounces[eachIngredientId] || 0,
+          unit: unit[eachIngredientId] || '',
           action: selectedActions[eachIngredientId]
         };
       }
@@ -165,6 +167,8 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
             <Form
               key={index}
               index={index}
+              unit={unit}
+              setUnit={setUnit}
               ingredientsCount={ingredientsCount}
               setIngredientsCount={setIngredientsCount}
               ounces={ounces}

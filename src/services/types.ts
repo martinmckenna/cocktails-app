@@ -20,6 +20,7 @@ interface IngInCocktail {
   type: string;
   id: number;
   ounces: number;
+  unit: string;
   action: string;
   step: number;
 }

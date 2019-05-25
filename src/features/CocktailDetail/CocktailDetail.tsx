@@ -158,7 +158,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
         <Grid item md={5} sm={12} className={props.classes.details}>
           <Typography variant="h3">{cocktail.name}</Typography>
           <Typography>
-            <em>Served in a {cocktail.glass} glass</em>
+            <em>Served in a {cocktail.glass}</em>
           </Typography>
           <Typography>
             <em>
@@ -180,8 +180,12 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
                   {eachIng.ounces === 0
                     ? eachIng.name
                     : eachIng.ounces !== 1
-                    ? `${eachIng.ounces} ounces ${eachIng.name}`
-                    : `${eachIng.ounces} ounce ${eachIng.name}`}
+                    ? `${eachIng.ounces} ${convertToPlural(
+                        eachIng.unit.toLowerCase()
+                      )} ${eachIng.name}`
+                    : `${eachIng.ounces} ${eachIng.unit.toLowerCase()} ${
+                        eachIng.name
+                      }`}
                 </Typography>
               );
             })}
@@ -200,6 +204,14 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
       </Grid>
     </React.Fragment>
   );
+};
+
+const convertToPlural = (word: string) => {
+  const lastChar = word.substr(-1);
+  if (lastChar.toLowerCase() === 'h') {
+    return `${word}es`;
+  }
+  return `${word}s`;
 };
 
 const styled = withStyles(styles);

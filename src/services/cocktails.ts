@@ -23,6 +23,7 @@ export interface Ingredient {
   id: number;
   step: number;
   action: ActionType;
+  unit: string;
 }
 
 export interface CreatePayload {
