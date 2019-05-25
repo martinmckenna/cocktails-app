@@ -1,12 +1,15 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { pathOr } from 'ramda';
 import { apiToken } from 'src/constants';
+import store from 'src/store';
 import { APIError } from './types';
 
 const request = Axios.create({ baseURL: 'https://api.barcart.net/' });
 
 request.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
-    const token = !!apiToken ? apiToken : '';
+    const tokenInStore = pathOr('', ['authState', 'token'], store.getState());
+    const token = !!apiToken ? apiToken : tokenInStore;
 
     return {
       ...config,

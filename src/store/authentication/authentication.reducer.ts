@@ -1,6 +1,10 @@
 import { APIError } from 'src/services/types';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { handleLogin, handleLogout } from './authentication.actions';
+import {
+  handleLogin,
+  handleLogout,
+  initSession
+} from './authentication.actions';
 
 export interface State {
   token: string;
@@ -15,18 +19,24 @@ export const initialState: State = {
   isLoggingIn: false
 };
 
+const localStorageKey = 'barcart/auth/token';
+
 const reducer = reducerWithInitialState(initialState)
   .case(handleLogin.started, state => {
     return {
       ...state,
-      isLoggingIn: true
+      isLoggingIn: true,
+      loginError: undefined
     };
   })
   .caseWithAction(handleLogin.done, (state, action) => {
+    /** set token in local storage */
+    localStorage.setItem(localStorageKey, action.payload.result.token);
+
     return {
       ...state,
       isLoggingIn: false,
-      token: action.payload.result
+      token: action.payload.result.token
     };
   })
   .caseWithAction(handleLogin.failed, (state, action) => {
@@ -37,10 +47,21 @@ const reducer = reducerWithInitialState(initialState)
     };
   })
   .case(handleLogout, state => {
+    localStorage.removeItem(localStorageKey);
+
     return {
       ...state,
       token: '',
       isLoggingIn: false
+    };
+  })
+  .case(initSession, state => {
+    /** read token from local storage */
+    const token = localStorage.getItem(localStorageKey) || '';
+
+    return {
+      ...state,
+      token
     };
   })
   .default(state => ({ ...state }));

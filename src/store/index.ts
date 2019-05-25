@@ -9,23 +9,30 @@ import thunk, {
   ThunkDispatch as _ThunkDispatch
 } from 'redux-thunk';
 
+import accountReducer, {
+  initialState as accountState,
+  State as AccountState
+} from './account/account.reducer';
 import authReducer, {
   initialState as authState,
   State as AuthState
 } from './authentication/authentication.reducer';
 
 const rootReducer = combineReducers<State>({
-  authState: authReducer
+  authState: authReducer,
+  accountState: accountReducer
 });
 
 interface State {
   authState: AuthState;
+  accountState: AccountState;
 }
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
 const defaultState: State = {
-  authState
+  authState,
+  accountState
 };
 
 export default createStore(
@@ -46,6 +53,13 @@ export type ThunkAction<R> = _ThunkAction<
 
 export type ThunkDispatch = _ThunkDispatch<State, undefined, AnyAction>;
 
-export type MapStateToProps<S, P> = _MapStateToProps<S, P, State>;
+export type MapStateToProps<StateProps, OwnProps> = _MapStateToProps<
+  StateProps,
+  OwnProps,
+  State
+>;
 
-export type MapDispatchToProps<S, P> = _MapDispatchToProps<S, P>;
+export type MapDispatchToProps<TDisProps, TOwnProps> = _MapDispatchToProps<
+  TDisProps,
+  TOwnProps
+>;

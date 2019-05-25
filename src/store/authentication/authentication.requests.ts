@@ -6,7 +6,7 @@ import { handleLogin as _handleLogin } from './authentication.actions';
 export const handleLogin = (
   username: string,
   password: string
-): ThunkAction<string | APIError> => dispatch => {
+): ThunkAction<{ token: string } | APIError> => dispatch => {
   dispatch(
     _handleLogin.started({
       username,

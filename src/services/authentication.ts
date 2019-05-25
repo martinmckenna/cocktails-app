@@ -7,5 +7,5 @@ export const login = (username: string, password: string) => {
       username,
       password
     }
-  }).then((response: AxiosResponse<string>) => response.data);
+  }).then((response: AxiosResponse<{ token: string }>) => response.data);
 };

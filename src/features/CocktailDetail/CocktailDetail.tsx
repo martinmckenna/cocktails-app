@@ -11,6 +11,7 @@ import { prop, sortBy } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
 
+import withAccount, { AccountProps } from 'src/contaners/withAccount';
 import {
   deleteCocktail,
   getCocktail,
@@ -68,7 +69,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = WithStyles<ClassNames> &
   RouteComponentProps<{ id: number }> &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  AccountProps;
 
 const CocktailDetail: React.FC<CombinedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -168,7 +170,7 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
               );
             })}
           </div>
-          {!isProduction && (
+          {!props.accountLoading && props.account && props.account.admin && (
             <Button
               isLoading={isDeleting}
               variant="secondary"
@@ -189,5 +191,6 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, RouteComponentProps>(
   styled,
   withSnackbar,
+  withAccount,
   React.memo
 )(CocktailDetail);

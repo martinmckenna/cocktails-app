@@ -1,9 +1,9 @@
-import actionCreatorFactory from 'typescript-fsa';
+import action from '../action';
 
-import { APIError, LoginCreds } from 'src/services/types';
+import { APIError, LoginCreds, Token } from 'src/services/types';
 
-const action = actionCreatorFactory('@@BARCARTDOTNET/');
-
-export const handleLogin = action.async<LoginCreds, string, APIError>('LOGIN');
+export const handleLogin = action.async<LoginCreds, Token, APIError>('LOGIN');
 
 export const handleLogout = action('LOGOUT');
+
+export const initSession = action('INIT_SESSION');

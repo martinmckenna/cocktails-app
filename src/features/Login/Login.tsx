@@ -4,7 +4,7 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { RouteComponentProps } from '@reach/router';
+import { Link, RouteComponentProps } from '@reach/router';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -33,6 +33,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       textAlign: 'center',
       marginTop: theme.spacing.unit * 3
     },
+    '& > p': {
+      textAlign: 'center',
+      marginTop: theme.spacing.unit * 3
+    },
     [theme.breakpoints.down('sm')]: {
       width: '90%'
     }
@@ -57,8 +61,8 @@ const Login: React.SFC<CombinedProps> = props => {
       .then(response => {
         props.navigate!('/');
       })
-      .catch((e: APIError) => {
-        props.enqueueSnackbar(e.error, {
+      .catch((event: APIError) => {
+        props.enqueueSnackbar(event.error, {
           variant: 'error'
         });
       });
@@ -67,6 +71,13 @@ const Login: React.SFC<CombinedProps> = props => {
   return (
     <form className={classes.root}>
       <Typography variant="h3">Login</Typography>
+      <Typography>
+        <em>
+          At this time, user accounts are restricted to administrators. Please
+          use the <Link to="/contact">contact form</Link> if you'd like an
+          account.
+        </em>
+      </Typography>
       <TextField
         onChange={e => setUsername(e.target.value)}
         label="Username"

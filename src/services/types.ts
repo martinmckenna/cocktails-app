@@ -40,3 +40,12 @@ export interface LoginCreds {
 export interface Token {
   token: string;
 }
+
+export interface Account {
+  id: number;
+  public_id: string;
+  favorites: any;
+  email: string;
+  name: string;
+  admin: boolean;
+}
