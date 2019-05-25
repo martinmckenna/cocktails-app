@@ -45,7 +45,11 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
   const fetchCocktails = (value: string) => {
     return getCocktails({ name: value })
       .then(response => {
-        setDropdownOptions(transformCocktailResponseToReactSelect(response));
+        const firstFive = {
+          ...response,
+          data: response.data.filter((e, index) => index < 5)
+        };
+        setDropdownOptions(transformCocktailResponseToReactSelect(firstFive));
         setFetching(false);
       })
       .catch(e => {
@@ -55,7 +59,9 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
   };
 
   const handleSelectOption = (option: ResolvedData) => {
-    props.navigate!(`/cocktails/${option.key}`);
+    if (option) {
+      props.navigate!(`/cocktails/${option.key}`);
+    }
   };
 
   const debouncedFetch = debounce(400, false, fetchCocktails);

@@ -96,7 +96,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
       .then(response => {
         const firstFive = {
           ...response,
-          data: response.data.filter((eachIng, index) => index <= 5)
+          data: response.data.filter((eachIng, index) => index < 5)
         };
         setLoadingAndError(false, undefined);
         setIngredients(transformAPIResponseToReactSelect(firstFive));
