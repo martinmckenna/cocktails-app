@@ -122,7 +122,8 @@ const Form: React.FC<Props> = props => {
       <TextField
         type="number"
         onChange={_setOunces}
-        placeholder="Enter Number of Parts"
+        // label="Ounces"
+        placeholder="Enter Number of Ounces"
       />
       <Select
         options={createOptions(actions)}

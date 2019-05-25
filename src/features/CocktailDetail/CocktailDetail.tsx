@@ -180,8 +180,8 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
                   {eachIng.ounces === 0
                     ? eachIng.name
                     : eachIng.ounces !== 1
-                    ? `${eachIng.ounces} parts ${eachIng.name}`
-                    : `${eachIng.ounces} part ${eachIng.name}`}
+                    ? `${eachIng.ounces} ounces ${eachIng.name}`
+                    : `${eachIng.ounces} ounce ${eachIng.name}`}
                 </Typography>
               );
             })}
