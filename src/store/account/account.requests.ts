@@ -23,6 +23,6 @@ export const getAccount = (): ThunkAction<Account | APIError> => dispatch => {
           params: {}
         })
       );
-      return Promise.reject(e);
+      return e;
     });
 };
