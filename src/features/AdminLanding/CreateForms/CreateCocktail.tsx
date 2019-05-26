@@ -29,6 +29,7 @@ const glasses: string[] = [
   'Goblet',
   'Margarita Glass',
   'Coffee Mug',
+  'Julep Glass',
   'Martini Glass',
   'Old-Fashioned Glass',
   'Irish Coffee Glass',
