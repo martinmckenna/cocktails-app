@@ -19,8 +19,6 @@ import {
 } from 'src/services/cocktails';
 import { APIError, Cocktail } from 'src/services/types';
 
-import { isProduction } from 'src/constants';
-
 import Button from 'src/components/Button';
 import Error from 'src/components/LandingError';
 import Loading from 'src/components/LandingLoading';
@@ -137,12 +135,22 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
 
   const sortedIngs = sortBy(prop('step'))(cocktail.ingredients);
 
-  const isShakenWithIce =
-    cocktail.finish &&
-    cocktail.finish.toLowerCase().includes('shaken with ice');
-  const isStirredWithIce =
-    cocktail.finish &&
-    cocktail.finish.toLowerCase().includes('stirred with ice');
+  const isShakenWithIce = cocktail.finish
+    ? cocktail.finish.toLowerCase().includes('shaken with ice')
+    : false;
+  const isStirredWithIce = cocktail.finish
+    ? cocktail.finish.toLowerCase().includes('stirred with ice')
+    : false;
+
+  const iceInGlass = cocktail.ingredients.some(
+    eachIng => eachIng.name.toLowerCase() === 'ice'
+  );
+
+  const headline = generateHeadline(
+    isShakenWithIce,
+    isStirredWithIce,
+    iceInGlass
+  );
 
   return (
     <React.Fragment>
@@ -161,30 +169,34 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
             <em>Served in a {cocktail.glass}</em>
           </Typography>
           <Typography>
-            <em>
-              {isStirredWithIce
-                ? 'Stir with ice. Strain into glass'
-                : isShakenWithIce
-                ? 'Shake with ice. Strain into glass'
-                : ''}
-            </em>
+            <em>{headline}</em>
           </Typography>
           <Typography variant="h5">Serving Instructions</Typography>
           <div className={props.classes.steps}>
-            {sortedIngs.map(eachIng => {
-              return (
-                <Typography key={eachIng.id}>
-                  {eachIng.step}.{' '}
-                  {eachIng.action.charAt(0).toUpperCase() +
-                    eachIng.action.substr(1)}{' '}
-                  {generateIngString(
-                    eachIng.unit,
-                    eachIng.ounces,
-                    eachIng.name
-                  )}
-                </Typography>
-              );
-            })}
+            {sortedIngs
+              .filter(eachIng => {
+                if (
+                  eachIng.name.toLowerCase() === 'ice' &&
+                  headline.includes('ice-filled glass')
+                ) {
+                  return false;
+                }
+                return true;
+              })
+              .map((eachIng, index) => {
+                return (
+                  <Typography key={eachIng.id}>
+                    {index + 1}.{' '}
+                    {eachIng.action.charAt(0).toUpperCase() +
+                      eachIng.action.substr(1)}{' '}
+                    {generateIngString(
+                      eachIng.unit,
+                      eachIng.ounces,
+                      eachIng.name
+                    )}
+                  </Typography>
+                );
+              })}
           </div>
           {!props.accountLoading && props.account && props.account.admin && (
             <Button
@@ -200,6 +212,24 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
       </Grid>
     </React.Fragment>
   );
+};
+
+const generateHeadline = (
+  isShakenWithIce: boolean,
+  isStirredWithIce: boolean,
+  iceInGlass: boolean
+) => {
+  const baseString = isShakenWithIce
+    ? 'Shaken with ice'
+    : isStirredWithIce
+    ? 'Stirred with ice'
+    : '';
+
+  return !baseString
+    ? ''
+    : iceInGlass
+    ? `${baseString}. Strain into ice-filled glass`
+    : `${baseString}. Strain into glass`;
 };
 
 const convertToPlural = (word: string) => {
