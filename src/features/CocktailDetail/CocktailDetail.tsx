@@ -146,11 +146,10 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
     eachIng => eachIng.name.toLowerCase() === 'ice'
   );
 
-  const headline = generateHeadline(
-    isShakenWithIce,
-    isStirredWithIce,
-    iceInGlass
-  );
+  const headline =
+    cocktail.finish && cocktail.finish.toLowerCase() === 'shaken'
+      ? 'Shaken without ice. Strain into glass'
+      : generateHeadline(isShakenWithIce, isStirredWithIce, iceInGlass);
 
   return (
     <React.Fragment>
