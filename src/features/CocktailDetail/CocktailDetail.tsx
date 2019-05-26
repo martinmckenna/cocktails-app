@@ -172,7 +172,6 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
           <Typography variant="h5">Serving Instructions</Typography>
           <div className={props.classes.steps}>
             {sortedIngs.map(eachIng => {
-              console.log(eachIng);
               return (
                 <Typography key={eachIng.id}>
                   {eachIng.step}.{' '}
