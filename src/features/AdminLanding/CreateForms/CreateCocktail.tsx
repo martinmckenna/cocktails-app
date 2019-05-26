@@ -22,7 +22,7 @@ import { APIError } from 'src/services/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 const glasses: string[] = [
-  'Rocks',
+  'Rocks Glass',
   'Highball',
   'Snifter',
   'Champagne Flute',
