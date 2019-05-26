@@ -1,11 +1,9 @@
 import Typography from '@material-ui/core/Typography';
 import { navigate, RouteComponentProps } from '@reach/router';
-import { assocPath } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
-import { ResolvedData } from 'src/components/Searchbar';
 import Select, { Option } from 'src/components/Select';
 import TextField from 'src/components/TextField';
 
@@ -73,6 +71,9 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   const [ingredientIds, setIngredientIds] = React.useState<
     Record<string, number>
   >({});
+  const [ingredientLabels, setIngredientLabels] = React.useState<
+    Record<string, string>
+  >({});
   const [ounces, setOunces] = React.useState<Record<string, number>>({});
   const [unit, setUnit] = React.useState<Record<string, string>>({});
   const [selectedActions, setActions] = React.useState<
@@ -80,27 +81,9 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   >({});
   const [error, setError] = React.useState<APIError | undefined>(undefined);
 
-  /*
-   * handler for selecting or removing an option
-   */
-  const handleChange = (
-    values: ResolvedData,
-    { action }: any,
-    index: number
-  ) => {
-    switch (action) {
-      case 'remove-value':
-      case 'pop-value':
-      case 'select-option':
-        setIngredientIds(assocPath([index], values.key, ingredientIds));
-      default:
-        return;
-    }
-  };
-
   const handleCreateCocktail = () => {
-    setLoading(true);
-    setError(undefined);
+    // setLoading(true);
+    // setError(undefined);
 
     const ingPayload: POSTIngredient[] = Object.keys(ingredientIds).map(
       eachIngredientId => {
@@ -113,6 +96,8 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
         };
       }
     );
+
+    return console.log(ingPayload);
 
     createCocktail({
       name: label,
@@ -175,7 +160,11 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
               setOunces={setOunces}
               selectedActions={selectedActions}
               setActions={setActions}
-              handleChange={handleChange}
+              ingredientLabels={ingredientLabels}
+              setIngredientLabels={setIngredientLabels}
+              // handleChange={handleChange}
+              setIngredientIDs={setIngredientIds}
+              ingredientIDs={ingredientIds}
               className={classes.section}
               loadingMessage={() => 'Fetching ingredients...'}
               noOptionsMessage={() => 'No Ingredients Found'}

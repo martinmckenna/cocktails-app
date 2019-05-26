@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import { assocPath, equals } from 'ramda';
+import { assoc, equals } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
@@ -21,7 +21,15 @@ interface Props {
   setActions: React.Dispatch<React.SetStateAction<Record<string, ActionType>>>;
   unit: Record<string, string>;
   setUnit: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  handleChange: (values: ResolvedData, { action }: any, index: number) => void;
+  // handleChange: (values: ResolvedData, { action }: any, index: number) => void;
+  ingredientIDs: Record<string, number>;
+  setIngredientIDs: (
+    value: React.SetStateAction<Record<string, number>>
+  ) => void;
+  ingredientLabels: Record<string, string>;
+  setIngredientLabels: (
+    value: React.SetStateAction<Record<string, string>>
+  ) => void;
   ingredientsCount: number;
   className?: string;
   loadingMessage: () => string;
@@ -45,13 +53,16 @@ const Form: React.FC<Props> = props => {
     ingredientsCount,
     setActions,
     selectedActions,
-    handleChange,
+    setIngredientIDs,
+    ingredientIDs,
     loadingMessage,
     noOptionsMessage,
     setOunces,
     unit,
     setUnit,
     setIngredientsCount,
+    ingredientLabels,
+    setIngredientLabels,
     className
   } = props;
 
@@ -62,24 +73,30 @@ const Form: React.FC<Props> = props => {
     boolean
   >(false);
 
-  const _setOunces = (e: React.ChangeEvent<HTMLInputElement>) => {
-    return setOunces(assocPath([index], e.target.value, ounces));
-  };
-
-  const _setActions = (value: Option<ActionType, ActionType>) => {
-    return setActions(assocPath([index], value.label, selectedActions));
-  };
-
-  const _setUnit = (value: Option<string, string>) => {
-    return setUnit(assocPath([index], value.label, unit));
+  /*
+   * handler for selecting or removing an option
+   */
+  const selectIngredient = (values: ResolvedData, { action }: any) => {
+    switch (action) {
+      case 'remove-value':
+      case 'pop-value':
+      case 'select-option':
+        setIngredientIDs(assoc(`${index}`, values.key, ingredientIDs));
+        setIngredientLabels(assoc(`${index}`, values.label, ingredientLabels));
+      default:
+        return;
+    }
   };
 
   const removeIngredient = () => {
-    return setIngredientsCount(ingredientsCount - 1);
-  };
+    /** set parent state */
+    setUnit(filterOutDeletedIndex(unit, index));
+    setIngredientIDs(filterOutDeletedIndex(ingredientIDs, index));
+    setIngredientLabels(filterOutDeletedIndex(ingredientLabels, index));
+    setActions(filterOutDeletedIndex(selectedActions, index));
+    setOunces(filterOutDeletedIndex(ounces, index));
 
-  const handleChangeInput = (value: any, action: any) => {
-    return handleChange(value, action, index);
+    return setIngredientsCount(ingredientsCount - 1);
   };
 
   const _handleSearch = (value: string) => {
@@ -119,9 +136,10 @@ const Form: React.FC<Props> = props => {
         className="react-select-container"
         classNamePrefix="react-select"
         dropDownOptions={dropDownOptions}
+        defaultValue={ingredientLabels[index] as any}
         loading={isFetchingIngredient}
         handleChange={_handleSearch}
-        handleSelect={handleChangeInput}
+        handleSelect={selectIngredient}
         loadingMessage={loadingMessage}
         noOptionsMessage={noOptionsMessage}
         placeholder="Search for an ingredient"
@@ -129,21 +147,23 @@ const Form: React.FC<Props> = props => {
         index={index}
         key={index}
       />
-      <Select
-        options={createOptions(units)}
-        handleSelect={_setUnit}
-        defaultOption="Select Unit of Measurement"
+      <UnitField
+        selectedUnits={unit}
+        index={index}
+        setUnit={setUnit}
+        ingCount={ingredientsCount}
       />
-      <TextField
-        type="number"
-        onChange={_setOunces}
-        // label="Ounces"
-        placeholder="How many servings to your measurement"
+      <AmountField
+        selectedAmounts={ounces}
+        index={index}
+        setAmount={setOunces}
+        ingCount={ingredientsCount}
       />
-      <Select
-        options={createOptions(actions)}
-        handleSelect={_setActions}
-        defaultOption="Select Action"
+      <ActionsField
+        selectedActions={selectedActions}
+        index={index}
+        setActions={setActions}
+        ingCount={ingredientsCount}
       />
       {index > 0 && (
         <Button onClick={removeIngredient} variant="secondary">
@@ -154,19 +174,106 @@ const Form: React.FC<Props> = props => {
   );
 };
 
+const filterOutDeletedIndex = (obj: Record<string, any>, index: number) => {
+  return Object.keys(obj).reduce((acc, eachKey) => {
+    return +eachKey === index
+      ? acc
+      : {
+          ...acc,
+          /** only subract one from the key if the key is not already 0 */
+          [+eachKey !== 0 ? +eachKey - 1 : eachKey]: obj[eachKey]
+        };
+  }, {});
+};
+
 const memoized = (component: React.FC<Props>) =>
   React.memo(component, (prevProps, nextProps) => {
     return (
-      equals(
-        prevProps.selectedActions[prevProps.index],
-        nextProps.selectedActions[nextProps.index]
-      ) &&
-      equals(
-        prevProps.ounces[prevProps.index],
-        nextProps.ounces[nextProps.index]
-      ) &&
+      equals(prevProps.selectedActions, nextProps.selectedActions) &&
+      equals(prevProps.ounces, nextProps.ounces) &&
+      equals(prevProps.unit, nextProps.unit) &&
+      equals(prevProps.ingredientIDs, nextProps.ingredientIDs) &&
+      equals(prevProps.ingredientLabels, nextProps.ingredientLabels) &&
       equals(prevProps.ingredientsCount, nextProps.ingredientsCount)
     );
   });
 
 export default compose<Props, Props>(memoized)(Form);
+
+const UnitField = React.memo(
+  (props: {
+    ingCount: number;
+    selectedUnits: Record<string, string>;
+    index: number;
+    setUnit: (value: React.SetStateAction<Record<string, string>>) => void;
+  }) => {
+    const { selectedUnits, index, setUnit } = props;
+    const updateUnits = (value: Option<string, string>) => {
+      return setUnit(assoc(`${index}`, value.label, selectedUnits));
+    };
+    return (
+      <Select
+        options={createOptions(units)}
+        handleSelect={updateUnits}
+        defaultOption="Select Unit of Measurement"
+        inputValue={selectedUnits[index] || ''}
+      />
+    );
+  },
+  (prevProps, nextProps) =>
+    equals(prevProps.selectedUnits, nextProps.selectedUnits) &&
+    equals(prevProps.ingCount, nextProps.ingCount)
+);
+
+const AmountField = React.memo(
+  (props: {
+    ingCount: number;
+    selectedAmounts: Record<string, number>;
+    index: number;
+    setAmount: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  }) => {
+    const { selectedAmounts, index, setAmount } = props;
+    const updateAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+      return setAmount(assoc(`${index}`, e.target.value, selectedAmounts));
+    };
+    return (
+      <TextField
+        type="number"
+        onChange={updateAmount}
+        // label="Ounces"
+        placeholder="How many servings to your measurement"
+        value={selectedAmounts[index] || ''}
+      />
+    );
+  },
+  (prevProps, nextProps) =>
+    equals(prevProps.selectedAmounts, nextProps.selectedAmounts) &&
+    equals(prevProps.ingCount, nextProps.ingCount)
+);
+
+const ActionsField = React.memo(
+  (props: {
+    ingCount: number;
+    selectedActions: Record<string, ActionType>;
+    index: number;
+    setActions: (
+      value: React.SetStateAction<Record<string, ActionType>>
+    ) => void;
+  }) => {
+    const { selectedActions, index, setActions } = props;
+    const updateActions = (value: Option<string, ActionType>) => {
+      return setActions(assoc(`${index}`, value.label, selectedActions));
+    };
+    return (
+      <Select
+        options={createOptions(actions)}
+        handleSelect={updateActions}
+        defaultOption="Select Action"
+        inputValue={selectedActions[index] || ''}
+      />
+    );
+  },
+  (prevProps, nextProps) =>
+    equals(prevProps.selectedActions, nextProps.selectedActions) &&
+    equals(prevProps.ingCount, nextProps.ingCount)
+);

@@ -63,13 +63,7 @@ const _Select: React.SFC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const memoized = (component: React.FC<CombinedProps>) =>
-  React.memo(component, (prevProps, nextProps) => {
-    /** don't ever update */
-    return true;
-  });
-
 export default compose<CombinedProps, SelectProps & Props>(
-  memoized,
+  React.memo,
   styled
 )(_Select);

@@ -51,6 +51,7 @@ interface Props {
   handleSubmit?: () => void;
   filterIce?: boolean;
   ingredientsCount?: number;
+  defaultValue?: string;
   index?: number;
 }
 
@@ -62,6 +63,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     dropDownOptions,
     loading,
     handleSelect,
+    defaultValue,
     handleSubmit
   } = props;
 
@@ -88,7 +90,9 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       handleChange(value);
     }
     if (action.action === 'set-value') {
-      setQuery('');
+      console.log('setvalue');
+      console.log(defaultValue);
+      setQuery(defaultValue || '');
     }
   };
 
@@ -126,6 +130,14 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       styles={customStyles}
       onKeyDown={handleKeyDown}
       inputValue={query}
+      value={
+        defaultValue
+          ? {
+              label: defaultValue,
+              value: defaultValue
+            }
+          : undefined
+      }
       key={props.index || 0}
       options={filteredOptions as any}
       name="ingredients"
@@ -177,7 +189,10 @@ const memoized = (component: React.FC<CombinedProps>) =>
     return (
       equals(prevProps.dropDownOptions, nextProps.dropDownOptions) &&
       prevProps.loading === nextProps.loading &&
-      prevProps.ingredientsCount === nextProps.ingredientsCount
+      prevProps.ingredientsCount === nextProps.ingredientsCount &&
+      prevProps.defaultValue === nextProps.defaultValue
+      // equals(prevProps.handleChange, nextProps.handleChange) &&
+      // equals(prevProps.handleSelect, nextProps.handleSelect)
     );
   });
 

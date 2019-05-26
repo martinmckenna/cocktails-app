@@ -53,12 +53,7 @@ const TextField: React.SFC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const memoized = (component: React.FC<CombinedProps>) =>
-  React.memo(component, (prevProps, nextProps) => {
-    return equals(prevProps.error, nextProps.error);
-  });
-
 export default compose<CombinedProps, Props>(
-  memoized,
+  React.memo,
   styled
 )(TextField);
