@@ -189,8 +189,10 @@ const filterOutDeletedIndex = (obj: Record<string, any>, index: number) => {
       ? acc
       : {
           ...acc,
-          /** only subract one from the key if the key is not already 0 */
-          [+eachKey !== 0 ? +eachKey - 1 : eachKey]: obj[eachKey]
+          /** only subract one from the key if the key is not already 0 or after the index to be deleted */
+          [+eachKey === 0 || +eachKey < index ? eachKey : +eachKey - 1]: obj[
+            eachKey
+          ]
         };
   }, {});
 };
