@@ -172,23 +172,17 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
           <Typography variant="h5">Serving Instructions</Typography>
           <div className={props.classes.steps}>
             {sortedIngs.map(eachIng => {
+              console.log(eachIng);
               return (
                 <Typography key={eachIng.id}>
                   {eachIng.step}.{' '}
-                  {eachIng.action.toLowerCase() === 'none'
-                    ? `${eachIng.action
-                        .charAt(0)
-                        .toUpperCase()}${eachIng.action.substr(1)} `
-                    : ' '}
-                  {eachIng.ounces === 0
-                    ? eachIng.name
-                    : eachIng.ounces !== 1
-                    ? `${eachIng.ounces} ${convertToPlural(
-                        eachIng.unit.toLowerCase()
-                      )} ${eachIng.name}`
-                    : `${eachIng.ounces} ${eachIng.unit.toLowerCase()} ${
-                        eachIng.name
-                      }`}
+                  {eachIng.action.charAt(0).toUpperCase() +
+                    eachIng.action.substr(1)}{' '}
+                  {generateIngString(
+                    eachIng.unit,
+                    eachIng.ounces,
+                    eachIng.name
+                  )}
                 </Typography>
               );
             })}
@@ -215,6 +209,39 @@ const convertToPlural = (word: string) => {
     return `${word}es`;
   }
   return `${word}s`;
+};
+
+const shouldSayUnit = (unit: string, ounces: number) => {
+  return unit.toLowerCase() === 'none' ||
+    (unit.toLowerCase() !== 'none' && ounces === 0)
+    ? false
+    : true;
+};
+
+const maybePluralizeUnit = (unit: string, ounces: number) => {
+  return ounces !== 1
+    ? convertToPlural(unit.toLowerCase())
+    : unit.toLowerCase();
+};
+
+const maybePluralizeName = (name: string, ounces: number, unit: string) => {
+  return unit.toLowerCase() === 'none' && ounces > 1
+    ? convertToPlural(name)
+    : name;
+};
+
+const generateIngString = (unit: string, ounces: number, name: string) => {
+  let baseString: string = `${ounces}`;
+
+  if (ounces === 0) {
+    return name;
+  }
+
+  if (shouldSayUnit(unit, ounces)) {
+    baseString = baseString + ` ${maybePluralizeUnit(unit, ounces)}`;
+  }
+
+  return `${baseString} ${maybePluralizeName(name, ounces, unit)}`;
 };
 
 const styled = withStyles(styles);
