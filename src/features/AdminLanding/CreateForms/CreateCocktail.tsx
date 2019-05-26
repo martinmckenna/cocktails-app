@@ -82,8 +82,8 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
   const [error, setError] = React.useState<APIError | undefined>(undefined);
 
   const handleCreateCocktail = () => {
-    // setLoading(true);
-    // setError(undefined);
+    setLoading(true);
+    setError(undefined);
 
     const ingPayload: POSTIngredient[] = Object.keys(ingredientIds).map(
       eachIngredientId => {
@@ -96,8 +96,6 @@ const CreateCocktail: React.FC<CombinedProps> = props => {
         };
       }
     );
-
-    return console.log(ingPayload);
 
     createCocktail({
       name: label,

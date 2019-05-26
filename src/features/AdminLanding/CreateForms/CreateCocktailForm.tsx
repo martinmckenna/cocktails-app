@@ -139,6 +139,7 @@ const Form: React.FC<Props> = props => {
         defaultValue={ingredientLabels[index] as any}
         loading={isFetchingIngredient}
         handleChange={_handleSearch}
+        isClearable={false}
         handleSelect={selectIngredient}
         loadingMessage={loadingMessage}
         noOptionsMessage={noOptionsMessage}

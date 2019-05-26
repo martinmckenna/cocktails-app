@@ -90,9 +90,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       handleChange(value);
     }
     if (action.action === 'set-value') {
-      console.log('setvalue');
-      console.log(defaultValue);
-      setQuery(defaultValue || '');
+      setQuery('');
     }
   };
 
@@ -100,6 +98,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     /**
      * submit form on ctrl+enter and shift+enter
      */
+
     if (!handleSubmit) {
       return;
     }
@@ -129,7 +128,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     <Select
       styles={customStyles}
       onKeyDown={handleKeyDown}
-      inputValue={query}
+      // inputValue={query}
       value={
         defaultValue
           ? {
