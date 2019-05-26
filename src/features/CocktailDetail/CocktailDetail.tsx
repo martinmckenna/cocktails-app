@@ -175,8 +175,11 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
               return (
                 <Typography key={eachIng.id}>
                   {eachIng.step}.{' '}
-                  {eachIng.action.charAt(0).toUpperCase() +
-                    eachIng.action.substr(1)}{' '}
+                  {eachIng.action.toLowerCase() === 'none'
+                    ? `${eachIng.action
+                        .charAt(0)
+                        .toUpperCase()}${eachIng.action.substr(1)} `
+                    : ' '}
                   {eachIng.ounces === 0
                     ? eachIng.name
                     : eachIng.ounces !== 1

@@ -46,6 +46,7 @@ const actions: string[] = ['Add', 'Muddle', 'Squeeze', 'Garnish', 'Rim'];
 
 const units: string[] = [
   'Ounce',
+  'None',
   'Dash',
   'Tablespoon',
   'Teaspoon',
