@@ -216,7 +216,14 @@ const UnitField = React.memo(
         options={createOptions(units)}
         handleSelect={updateUnits}
         defaultOption="Select Unit of Measurement"
-        inputValue={selectedUnits[index] || ''}
+        value={
+          selectedUnits[index]
+            ? {
+                label: selectedUnits[index] as string,
+                value: `${index}` as string
+              }
+            : undefined
+        }
       />
     );
   },
@@ -269,7 +276,14 @@ const ActionsField = React.memo(
         options={createOptions(actions)}
         handleSelect={updateActions}
         defaultOption="Select Action"
-        inputValue={selectedActions[index] || ''}
+        value={
+          selectedActions[index]
+            ? {
+                label: selectedActions[index] as string,
+                value: `${index}` as string
+              }
+            : undefined
+        }
       />
     );
   },
