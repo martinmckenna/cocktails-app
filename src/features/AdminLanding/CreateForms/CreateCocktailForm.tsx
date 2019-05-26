@@ -118,7 +118,7 @@ const Form: React.FC<Props> = props => {
       .then(response => {
         const firstFive = {
           ...response,
-          data: response.data.filter((eachIng, filterInd) => filterInd < 5)
+          data: response.data.filter((eachIng, filterInd) => filterInd < 10)
         };
 
         setIsFetchingIngredient(false);
