@@ -44,7 +44,14 @@ const createOptions = (list: string[]): Option<string, string>[] =>
 
 const actions: string[] = ['Add', 'Muddle', 'Squeeze', 'Garnish', 'Rim'];
 
-const units: string[] = ['Ounce', 'Dash', 'Tablespoon', 'Teaspoon', 'Splash'];
+const units: string[] = [
+  'Ounce',
+  'Dash',
+  'Tablespoon',
+  'Teaspoon',
+  'Splash',
+  'Pinch'
+];
 
 const Form: React.FC<Props> = props => {
   const {
