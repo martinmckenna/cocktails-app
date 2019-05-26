@@ -128,7 +128,7 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     <Select
       styles={customStyles}
       onKeyDown={handleKeyDown}
-      // inputValue={query}
+      inputValue={query}
       value={
         defaultValue
           ? {
