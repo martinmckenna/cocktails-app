@@ -26,7 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     margin: '0 auto',
     marginTop: theme.spacing.unit * 4,
-    width: '85%'
+    width: '85%',
+    '&>h3': {
+      marginBottom: theme.spacing.unit * 1.5
+    }
   },
   form: {
     display: 'flex',
@@ -69,7 +72,10 @@ const Contact: React.FC<CombinedProps> = props => {
   };
   return (
     <div className={classes.root}>
-      <Typography variant="h3">Contact Me</Typography>
+      <Typography variant="h3">Contact Marty</Typography>
+      <Typography>
+        How can I make this app better? What drinks do you want to see?
+      </Typography>
       <Formik
         initialValues={{
           name: '',

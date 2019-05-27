@@ -86,9 +86,9 @@ export const getCocktailImages = (query: string) => {
   return Axios('https://api.imgur.com/3/gallery/search/top/', {
     method: 'GET',
     params: {
-      q_all: `${query}`,
+      q: `${query} cocktail`,
       // q_or: `cocktail drink`,
-      q_type: 'jpg',
+      // q_type: 'jpg',
       // q_size_px: 'huge',
       // window: 'year',
       q_not: 'cupcakes me'

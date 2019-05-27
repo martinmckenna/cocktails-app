@@ -105,15 +105,15 @@ const CocktailDetail: React.FC<CombinedProps> = props => {
         setCocktail(response);
         setLoading(false);
 
-        getCocktailImages(response.name)
-          .then(listOfImages => {
-            setImageLoading(false);
-            // setImageSrc(listOfImages[1].link);
-          })
-          .catch(e => {
-            setImageError('There was an error loading this image.');
-            setImageLoading(false);
-          });
+        // getCocktailImages(response.name)
+        //   .then(listOfImages => {
+        //     setImageLoading(false);
+        //     setImageSrc(listOfImages[0].link);
+        //   })
+        //   .catch(e => {
+        //     setImageError('There was an error loading this image.');
+        //     setImageLoading(false);
+        //   });
       })
       .catch(err => {
         setError(err);

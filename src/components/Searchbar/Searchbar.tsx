@@ -3,11 +3,13 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import { equals } from 'ramda';
 import React from 'react';
 import Select, { components } from 'react-select';
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { compose } from 'recompose';
+import { debounce } from 'throttle-debounce';
+
+import { APIError } from '../../services/types';
 
 import Button from 'src/components/Button';
 
@@ -44,9 +46,7 @@ export interface ResolvedData {
 }
 
 interface Props {
-  handleChange: (value: string) => void;
-  loading: boolean;
-  dropDownOptions?: ResolvedData[];
+  handleInputChange: (value: string) => Promise<ResolvedData[]>;
   handleSelect: (value: any, action: any) => void;
   handleSubmit?: () => void;
   filterIce?: boolean;
@@ -57,17 +57,16 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & SelectProps;
 
+let debouncedFetch: any;
+
 const Searchbar: React.SFC<CombinedProps> = props => {
-  const {
-    handleChange,
-    dropDownOptions,
-    loading,
-    handleSelect,
-    defaultValue,
-    handleSubmit
-  } = props;
+  const { handleSelect, handleInputChange, defaultValue, handleSubmit } = props;
 
   const [query, setQuery] = React.useState<string>('');
+  const [isFetching, setFetching] = React.useState<boolean>(false);
+  const [dropDownOptions, setDropDownOptions] = React.useState<ResolvedData[]>(
+    []
+  );
 
   const inputRef = React.useCallback(
     node => {
@@ -79,7 +78,23 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     [props.ingredientsCount]
   );
 
-  const onInputChange = (value: string, action: any) => {
+  const asyncRequest = (value: string) => {
+    return handleInputChange(value)
+      .then(response => {
+        setFetching(false);
+        setDropDownOptions(response);
+      })
+      .catch((e: APIError) => {
+        setFetching(false);
+        setDropDownOptions([]);
+      });
+  };
+
+  React.useEffect(() => {
+    debouncedFetch = debounce(450, false, asyncRequest);
+  }, []);
+
+  const _handleInputChange = (value: string, action: any) => {
     /** don't clear the input when we blur the input field */
     if (
       action.action !== 'input-blur' &&
@@ -87,7 +102,10 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       action.action !== 'set-value'
     ) {
       setQuery(value);
-      handleChange(value);
+      if (typeof debouncedFetch === 'function') {
+        setFetching(true);
+        debouncedFetch(value);
+      }
     }
     if (action.action === 'set-value') {
       setQuery('');
@@ -140,8 +158,8 @@ const Searchbar: React.SFC<CombinedProps> = props => {
       key={props.index || 0}
       options={filteredOptions as any}
       name="ingredients"
-      onInputChange={onInputChange}
-      isLoading={loading}
+      onInputChange={_handleInputChange}
+      isLoading={isFetching}
       isClearable={true}
       ref={inputRef}
       onChange={handleSelect}
@@ -186,8 +204,6 @@ const styled = withStyles(styles);
 const memoized = (component: React.FC<CombinedProps>) =>
   React.memo(component, (prevProps, nextProps) => {
     return (
-      equals(prevProps.dropDownOptions, nextProps.dropDownOptions) &&
-      prevProps.loading === nextProps.loading &&
       prevProps.ingredientsCount === nextProps.ingredientsCount &&
       prevProps.defaultValue === nextProps.defaultValue
       // equals(prevProps.handleChange, nextProps.handleChange) &&

@@ -7,13 +7,11 @@ import {
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { compose } from 'recompose';
-import { debounce } from 'throttle-debounce';
 
 import Button from 'src/components/Button';
 import Searchbar, { ResolvedData } from '../../components/Searchbar';
 
 import { getCocktails } from '../../services/cocktails';
-import { APIError } from '../../services/types';
 
 import { transformCocktailResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
 
@@ -37,11 +35,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
 const SearchByCocktail: React.FC<CombinedProps> = props => {
-  const [isFetching, setFetching] = React.useState<boolean>(false);
-  const [dropdownOptions, setDropdownOptions] = React.useState<ResolvedData[]>(
-    []
-  );
-
   const fetchCocktails = (value: string) => {
     return getCocktails({ name: value })
       .then(response => {
@@ -49,12 +42,10 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
           ...response,
           data: response.data.filter((e, index) => index < 5)
         };
-        setDropdownOptions(transformCocktailResponseToReactSelect(firstFive));
-        setFetching(false);
+        return transformCocktailResponseToReactSelect(firstFive);
       })
       .catch(e => {
-        setFetching(false);
-        setDropdownOptions([]);
+        return Promise.reject(e);
       });
   };
 
@@ -64,13 +55,6 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
     }
   };
 
-  const debouncedFetch = debounce(400, false, fetchCocktails);
-
-  const handleInputChange = (value: string) => {
-    setFetching(true);
-    debouncedFetch(value);
-  };
-
   const { classes } = props;
   return (
     <React.Fragment>
@@ -78,21 +62,14 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
         <Searchbar
           className="react-select-container"
           classNamePrefix="react-select"
-          // handleSubmit={() => null}
-          dropDownOptions={dropdownOptions}
-          loading={isFetching}
-          handleChange={handleInputChange}
+          handleInputChange={fetchCocktails}
           handleSelect={handleSelectOption}
           loadingMessage={() => 'Fetching cocktails...'}
           noOptionsMessage={() => 'No Cocktails Found'}
           placeholder='Search cocktails (e.g "Aperol Spritzer" or "Mojito")'
         />
       </Grid>
-      <Button
-        className={classes.searchButton}
-        // onClick={() => null}
-        style={{ marginTop: '1em' }}
-      >
+      <Button className={classes.searchButton} style={{ marginTop: '1em' }}>
         Search
       </Button>
     </React.Fragment>

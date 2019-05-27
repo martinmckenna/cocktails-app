@@ -8,7 +8,6 @@ import { RouteComponentProps } from '@reach/router';
 import { stringify } from 'querystring';
 import React from 'react';
 import { compose, StateHandlerMap, withStateHandlers } from 'recompose';
-import { debounce } from 'throttle-debounce';
 
 import Button from 'src/components/Button';
 import Checkbox from '../../components/Checkbox';
@@ -46,8 +45,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 type CombinedProps = WithStyles<ClassNames> &
-  SearchState &
-  SearchStateSetters &
   SelectedOptions &
   OptionSelectHandler &
   RouteComponentProps<any>;
@@ -89,7 +86,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
   }
 
   fetchIngredient = (value: string) => {
-    const { setLoadingAndError, setIngredients } = this.props;
     return getIngredients({
       name: value
     })
@@ -98,21 +94,11 @@ class Home extends React.PureComponent<CombinedProps, State> {
           ...response,
           data: response.data.filter((eachIng, index) => index < 5)
         };
-        setLoadingAndError(false, undefined);
-        setIngredients(transformAPIResponseToReactSelect(firstFive));
+        return transformAPIResponseToReactSelect(firstFive);
       })
-      .catch((e: Error) => {
-        setLoadingAndError(false, e);
-        setIngredients([]);
+      .catch((e: APIError) => {
+        return Promise.reject(e);
       });
-  };
-
-  debouncedFetch = debounce(400, false, this.fetchIngredient);
-
-  handleSearch = (value: string) => {
-    const { setLoadingAndError } = this.props;
-    setLoadingAndError(true, undefined);
-    this.debouncedFetch(value);
   };
 
   /**
@@ -157,7 +143,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { loading, dropDownData, classes } = this.props;
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -168,9 +154,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
             className="react-select-container"
             classNamePrefix="react-select"
             handleSubmit={this.handleSubmit}
-            dropDownOptions={dropDownData}
-            loading={loading}
-            handleChange={this.handleSearch}
+            handleInputChange={this.fetchIngredient}
             handleSelect={this.handleChange}
             loadingMessage={() => 'Fetching ingredients...'}
             noOptionsMessage={() => 'No Ingredients Found'}
@@ -201,32 +185,6 @@ class Home extends React.PureComponent<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface SearchState {
-  loading: boolean;
-  error?: APIError;
-  dropDownData?: ResolvedData[];
-}
-
-interface SearchStateSetters {
-  setLoadingAndError: (isLoading: boolean, error: any) => void;
-  setIngredients: (payload: ResolvedData[]) => void;
-}
-
-type StateAndSetters = StateHandlerMap<SearchState> & SearchStateSetters;
-
-const withSearchFunctions = withStateHandlers<SearchState, StateAndSetters, {}>(
-  {
-    loading: false
-  },
-  {
-    setLoadingAndError: () => (isLoading, error) => ({
-      loading: isLoading,
-      error
-    }),
-    setIngredients: () => dropDownData => ({ dropDownData })
-  }
-);
-
 interface SelectedOptions {
   selectedOptions: ResolvedData[];
 }
@@ -241,7 +199,7 @@ type SelectOptionStateAndSetters = StateHandlerMap<SelectedOptions> &
 const withSelectOptionHandling = withStateHandlers<
   SelectedOptions,
   SelectOptionStateAndSetters,
-  SearchState & SearchStateSetters
+  RouteComponentProps
 >(
   {
     selectedOptions: []
@@ -258,8 +216,6 @@ const withSelectOptionHandling = withStateHandlers<
 );
 
 export default compose<CombinedProps, RouteComponentProps>(
-  /** responsible for setting the drop down options */
-  withSearchFunctions,
   /** responsible for setting the filter for GET /cocktails/ */
   withSelectOptionHandling,
   styled

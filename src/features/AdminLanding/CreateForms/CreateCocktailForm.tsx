@@ -2,7 +2,6 @@ import Typography from '@material-ui/core/Typography';
 import { assoc, equals } from 'ramda';
 import React from 'react';
 import { compose } from 'recompose';
-import { debounce } from 'throttle-debounce';
 
 import Button from 'src/components/Button';
 import Searchbar, { ResolvedData } from 'src/components/Searchbar';
@@ -11,6 +10,8 @@ import TextField from 'src/components/TextField';
 import { ActionType } from 'src/services/cocktails';
 import { getIngredients } from 'src/services/ingredients';
 import { transformAPIResponseToReactSelect } from 'src/utils/transformAPIResponseToReactSelect';
+
+import { APIError } from 'src/services/types';
 
 interface Props {
   setIngredientsCount: (count: number) => void;
@@ -74,13 +75,6 @@ const Form: React.FC<Props> = props => {
     className
   } = props;
 
-  const [dropDownOptions, setDropDownOptions] = React.useState<ResolvedData[]>(
-    []
-  );
-  const [isFetchingIngredient, setIsFetchingIngredient] = React.useState<
-    boolean
-  >(false);
-
   /*
    * handler for selecting or removing an option
    */
@@ -107,10 +101,6 @@ const Form: React.FC<Props> = props => {
     return setIngredientsCount(ingredientsCount - 1);
   };
 
-  const _handleSearch = (value: string) => {
-    return handleSearch(value);
-  };
-
   const fetchIngredient = (value: string) => {
     return getIngredients({
       name: value
@@ -121,20 +111,11 @@ const Form: React.FC<Props> = props => {
           data: response.data.filter((eachIng, filterInd) => filterInd < 10)
         };
 
-        setIsFetchingIngredient(false);
-        setDropDownOptions(transformAPIResponseToReactSelect(firstFive));
+        return transformAPIResponseToReactSelect(firstFive);
       })
-      .catch((e: Error) => {
-        setIsFetchingIngredient(false);
-        setDropDownOptions([]);
+      .catch((e: APIError) => {
+        return Promise.reject(e);
       });
-  };
-
-  const debouncedFetch = debounce(400, false, fetchIngredient);
-
-  const handleSearch = (value: string) => {
-    setIsFetchingIngredient(true);
-    debouncedFetch(value);
   };
 
   return (
@@ -143,10 +124,8 @@ const Form: React.FC<Props> = props => {
       <Searchbar
         className="react-select-container"
         classNamePrefix="react-select"
-        dropDownOptions={dropDownOptions}
         defaultValue={ingredientLabels[index] as any}
-        loading={isFetchingIngredient}
-        handleChange={_handleSearch}
+        handleInputChange={fetchIngredient}
         isClearable={false}
         handleSelect={selectIngredient}
         loadingMessage={loadingMessage}
