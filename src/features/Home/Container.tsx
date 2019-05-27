@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '85%',
     margin: '0 auto',
     paddingTop: theme.spacing.unit * 3,
-    '& > div > p': {
+    '& > div:first-child > p': {
       textAlign: 'center',
       marginTop: theme.spacing.unit
     }

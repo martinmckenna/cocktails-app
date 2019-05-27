@@ -35,6 +35,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 type CombinedProps = RouteComponentProps & WithStyles<ClassNames>;
 
 const SearchByCocktail: React.FC<CombinedProps> = props => {
+  const [error, setError] = React.useState<string>('');
+
   const fetchCocktails = (value: string) => {
     return getCocktails({ name: value })
       .then(response => {
@@ -55,12 +57,17 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
     }
   };
 
+  const handleSubmit = () => {
+    setError('Please choose a cocktail.');
+  };
+
   const { classes } = props;
   return (
     <React.Fragment>
       <Grid className={classes.searchbar} item xs={12}>
         <Searchbar
           className="react-select-container"
+          error={error}
           classNamePrefix="react-select"
           handleInputChange={fetchCocktails}
           handleSelect={handleSelectOption}
@@ -69,7 +76,11 @@ const SearchByCocktail: React.FC<CombinedProps> = props => {
           placeholder='Search cocktails (e.g "Aperol Spritzer" or "Mojito")'
         />
       </Grid>
-      <Button className={classes.searchButton} style={{ marginTop: '1em' }}>
+      <Button
+        onClick={handleSubmit}
+        className={classes.searchButton}
+        style={{ marginTop: '1em' }}
+      >
         Search
       </Button>
     </React.Fragment>

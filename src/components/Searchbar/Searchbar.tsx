@@ -3,6 +3,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
+import Typorgraphy from '@material-ui/core/Typography';
 import React from 'react';
 import Select, { components } from 'react-select';
 import { Props as SelectProps } from 'react-select/lib/Select';
@@ -13,15 +14,24 @@ import { APIError } from '../../services/types';
 
 import Button from 'src/components/Button';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'error';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit
+  },
+  error: {
+    textAlign: 'left',
+    color: 'red',
+    marginTop: theme.spacing.unit
   }
 });
 
-const customStyles = {
+const customStyles = (error?: string) => ({
+  container: (providedStyles: any) => ({
+    ...providedStyles,
+    outline: error ? '1px solid red' : 'none'
+  }),
   menuList: (providedStyles: any) => ({
     ...providedStyles,
     textAlign: 'left',
@@ -36,7 +46,7 @@ const customStyles = {
     ...providedStyles,
     padding: '1em'
   })
-};
+});
 
 export interface ResolvedData {
   label: string;
@@ -53,6 +63,7 @@ interface Props {
   ingredientsCount?: number;
   defaultValue?: string;
   index?: number;
+  error?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & SelectProps;
@@ -60,7 +71,13 @@ type CombinedProps = Props & WithStyles<ClassNames> & SelectProps;
 let debouncedFetch: any;
 
 const Searchbar: React.SFC<CombinedProps> = props => {
-  const { handleSelect, handleInputChange, defaultValue, handleSubmit } = props;
+  const {
+    handleSelect,
+    handleInputChange,
+    defaultValue,
+    handleSubmit,
+    error
+  } = props;
 
   const [query, setQuery] = React.useState<string>('');
   const [isFetching, setFetching] = React.useState<boolean>(false);
@@ -143,32 +160,37 @@ const Searchbar: React.SFC<CombinedProps> = props => {
     : [];
 
   return (
-    <Select
-      styles={customStyles}
-      onKeyDown={handleKeyDown}
-      inputValue={query}
-      value={
-        defaultValue
-          ? {
-              label: defaultValue,
-              value: defaultValue
-            }
-          : undefined
-      }
-      key={props.index || 0}
-      options={filteredOptions as any}
-      name="ingredients"
-      onInputChange={_handleInputChange}
-      isLoading={isFetching}
-      isClearable={true}
-      ref={inputRef}
-      onChange={handleSelect}
-      components={{
-        MenuList: componentProps =>
-          _Menu({ ...componentProps, handleSubmit: props.handleSubmit })
-      }}
-      {...props}
-    />
+    <React.Fragment>
+      <Select
+        styles={customStyles(error)}
+        onKeyDown={handleKeyDown}
+        inputValue={query}
+        value={
+          defaultValue
+            ? {
+                label: defaultValue,
+                value: defaultValue
+              }
+            : undefined
+        }
+        key={props.index || 0}
+        options={filteredOptions as any}
+        name="ingredients"
+        onInputChange={_handleInputChange}
+        isLoading={isFetching}
+        isClearable={true}
+        ref={inputRef}
+        onChange={handleSelect}
+        components={{
+          MenuList: componentProps =>
+            _Menu({ ...componentProps, handleSubmit: props.handleSubmit })
+        }}
+        {...props}
+      />
+      {error && (
+        <Typorgraphy className={props.classes.error}>{error}</Typorgraphy>
+      )}
+    </React.Fragment>
   );
 };
 
@@ -205,7 +227,8 @@ const memoized = (component: React.FC<CombinedProps>) =>
   React.memo(component, (prevProps, nextProps) => {
     return (
       prevProps.ingredientsCount === nextProps.ingredientsCount &&
-      prevProps.defaultValue === nextProps.defaultValue
+      prevProps.defaultValue === nextProps.defaultValue &&
+      prevProps.error === nextProps.error
       // equals(prevProps.handleChange, nextProps.handleChange) &&
       // equals(prevProps.handleSelect, nextProps.handleSelect)
     );

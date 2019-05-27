@@ -51,6 +51,7 @@ type CombinedProps = WithStyles<ClassNames> &
 
 interface State {
   willShop: boolean;
+  error?: string;
 }
 
 class Home extends React.PureComponent<CombinedProps, State> {
@@ -109,6 +110,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
       case 'remove-value':
       case 'pop-value':
       case 'select-option':
+        this.setState({ error: undefined });
         return this.props.handleSelectOption(values);
       default:
         return;
@@ -117,6 +119,15 @@ class Home extends React.PureComponent<CombinedProps, State> {
 
   handleSubmit = () => {
     const { selectedOptions, navigate } = this.props;
+
+    if (
+      !selectedOptions ||
+      selectedOptions.filter(each => !each.isFixed).length === 0
+    ) {
+      return this.setState({
+        error: 'Please choose some ingredients.'
+      });
+    }
 
     /**
      * if we are willing to shop for more ings
@@ -151,6 +162,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
           <Searchbar
             filterIce
             isMulti
+            error={this.state.error}
             className="react-select-container"
             classNamePrefix="react-select"
             handleSubmit={this.handleSubmit}
@@ -164,8 +176,8 @@ class Home extends React.PureComponent<CombinedProps, State> {
         <Grid item xs={12} className={classes.checkbox}>
           <Checkbox
             onChange={this.toggleWillShop}
-            checked={this.state.willShop}
-            label="I want to see cocktail suggestions, even though I only have the partial requirements."
+            checked={!this.state.willShop}
+            label="Show me cocktails for which I have 100% of the ingredients."
             // helperText={`For example, if you only have Gin, but you'd still
             // like to see suggestions for a Gin and Tonic and other drinks
             // you could make with additional ingredients, check this box.`}
