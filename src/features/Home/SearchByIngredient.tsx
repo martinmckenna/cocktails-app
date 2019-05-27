@@ -158,7 +158,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
             handleSelect={this.handleChange}
             loadingMessage={() => 'Fetching ingredients...'}
             noOptionsMessage={() => 'No Ingredients Found'}
-            placeholder='Search ingredients (e.g "Vodka" or "Orange Juice")'
+            placeholder='What Ingredients do you have? (e.g "Vodka" or "Orange Juice")'
           />
         </Grid>
         <Grid item xs={12} className={classes.checkbox}>
