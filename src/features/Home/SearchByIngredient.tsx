@@ -177,7 +177,7 @@ class Home extends React.PureComponent<CombinedProps, State> {
           <Checkbox
             onChange={this.toggleWillShop}
             checked={!this.state.willShop}
-            label="Show me cocktails for which I have 100% of the ingredients."
+            label="Only show me cocktails for which I have 100% of the ingredients."
             // helperText={`For example, if you only have Gin, but you'd still
             // like to see suggestions for a Gin and Tonic and other drinks
             // you could make with additional ingredients, check this box.`}
